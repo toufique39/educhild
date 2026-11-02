@@ -9,6 +9,8 @@ type EduChildEvent = Record<string, unknown> & {
     imageUrl: string;
     createdAt: string;
     updatedAt: string;
+    area?: string;
+    city?: string;
 };
 
 const EVENTS_API_URL =

@@ -5,12 +5,10 @@ import { CalendarDays } from "lucide-react";
 import { fetchUpcomingEvents } from "@/lib/events";
 import { EventCard } from "@/components/layout/event-card";
 import { EventGridSkeleton } from "@/components/layout/event-grid-skeleton";
-import { error } from "console";
+
 
 async function UpcomingEventsList() {
-  try {
     const events = await fetchUpcomingEvents();
-
     if (events.length === 0) {
       return (
         <div className="text-center text-muted-foreground">
@@ -28,15 +26,8 @@ async function UpcomingEventsList() {
       </div>
     );
   }
-  catch (err) {
-    console.error("Error fetching upcoming events:", err);
-    return (
-      <div className="text-center text-red-500">
-        <p>Failed to load upcoming events. Please try again later.</p>
-      </div>
-    );
-  }
-}
+
+
 
 export default function UpcomingEventsPage() {
   return (
