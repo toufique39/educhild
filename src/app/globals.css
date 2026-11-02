@@ -1,0 +1,134 @@
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.875rem;
+
+  /* EduChild Brand */
+  --background: #f8faf7;
+  --foreground: #1e2e27;
+
+  --card: #ffffff;
+  --card-foreground: #1e2e27;
+
+  --popover: #ffffff;
+  --popover-foreground: #1e2e27;
+
+  --primary: #226b52;
+  --primary-foreground: #ffffff;
+
+  --secondary: #eaf2ec;
+  --secondary-foreground: #1f4d3a;
+
+  --muted: #f0f3ef;
+  --muted-foreground: #68776e;
+
+  --accent: #f3b85d;
+  --accent-foreground: #243126;
+
+  --destructive: #dc4b4b;
+
+  --border: #e1e9e2;
+  --input: #e1e9e2;
+  --ring: #3d9974;
+
+  --chart-1: #226b52;
+  --chart-2: #f3b85d;
+  --chart-3: #659b7a;
+  --chart-4: #8ab5a0;
+  --chart-5: #d69b43;
+}
+
+.dark {
+  --background: #101b17;
+  --foreground: #ecf3ed;
+
+  --card: #172720;
+  --card-foreground: #ecf3ed;
+
+  --popover: #172720;
+  --popover-foreground: #ecf3ed;
+
+  --primary: #50a982;
+  --primary-foreground: #09251a;
+
+  --secondary: #203b30;
+  --secondary-foreground: #dce9df;
+
+  --muted: #1a2c24;
+  --muted-foreground: #a0b1a6;
+
+  --accent: #d69b43;
+  --accent-foreground: #1d251d;
+
+  --destructive: #ef6464;
+
+  --border: #294136;
+  --input: #294136;
+  --ring: #58a982;
+
+  --chart-1: #50a982;
+  --chart-2: #d69b43;
+  --chart-3: #8ab5a0;
+  --chart-4: #659b7a;
+  --chart-5: #f3b85d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
