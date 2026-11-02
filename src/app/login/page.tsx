@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   // Handle login
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,6 +63,34 @@ export default function LoginPage() {
       setIsSubmitting(false);
     }
   };
+
+  const handleGoogleLogin = async () => {
+  setErrorMessage("");
+  setIsGoogleSubmitting(true);
+
+  try {
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+
+    if (error) {
+      setErrorMessage(
+        error.message || "Google login failed. Please try again."
+      );
+    }
+  } catch (error) {
+    console.error("Google login error:", error);
+
+    setErrorMessage(
+      error instanceof Error
+        ? error.message
+        : "Something went wrong with Google login."
+    );
+  } finally {
+    setIsGoogleSubmitting(false);
+  }
+};
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F8FAF7] px-4 py-12">
@@ -176,14 +204,18 @@ export default function LoginPage() {
           </div>
 
           {/* Google Login - OAuth configuration pending */}
-          <button
-            type="button"
-            disabled
-            className="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-500 opacity-70"
-          >
-            <span className="text-lg font-bold">G</span>
-            Google Login (Coming Soon)
-          </button>
+         <button
+  type="button"
+  onClick={handleGoogleLogin}
+  disabled={isGoogleSubmitting || isSubmitting}
+  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+>
+  <span className="text-lg font-bold">G</span>
+
+  {isGoogleSubmitting
+    ? "Connecting to Google..."
+    : "Continue with Google"}
+</button>
 
           {/* Register Link */}
           <p className="mt-7 text-center text-sm text-gray-500">

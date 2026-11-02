@@ -18,40 +18,43 @@ export default function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Handle registration
+  // Email and Password Registration
   const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     setErrorMessage("");
 
-    // Password validation
     if (password.length < 6) {
       setErrorMessage("Password must contain at least 6 characters.");
       return;
     }
 
     if (!/[A-Z]/.test(password)) {
-      setErrorMessage("Password must contain at least one uppercase letter.");
+      setErrorMessage(
+        "Password must contain at least one uppercase letter."
+      );
       return;
     }
 
     if (!/[a-z]/.test(password)) {
-      setErrorMessage("Password must contain at least one lowercase letter.");
+      setErrorMessage(
+        "Password must contain at least one lowercase letter."
+      );
       return;
     }
 
     try {
       setIsSubmitting(true);
 
-      // Create user using Better Auth
       const { error } = await authClient.signUp.email({
         name,
         email,
         password,
-        callbackURL: "/",
       });
 
       if (error) {
@@ -59,11 +62,7 @@ export default function RegisterPage() {
         return;
       }
 
-      // Registration successful
       setIsSuccess(true);
-
-      console.log("User registered successfully:", { name, email });
-
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -74,6 +73,36 @@ export default function RegisterPage() {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Google Registration
+  const handleGoogleSignup = async () => {
+    setErrorMessage("");
+
+    try {
+      setIsGoogleSubmitting(true);
+
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+
+      if (error) {
+        setErrorMessage(
+          error.message || "Google registration failed."
+        );
+      }
+    } catch (error) {
+      console.error("Google signup error:", error);
+
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to register with Google."
+      );
+    } finally {
+      setIsGoogleSubmitting(false);
     }
   };
 
@@ -97,7 +126,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Success Message */}
+          {/* Registration Success */}
           {isSuccess ? (
             <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center">
               <h2 className="text-lg font-bold text-green-800">
@@ -110,119 +139,147 @@ export default function RegisterPage() {
 
               <Link
                 href="/"
-                className="mt-5 inline-block rounded-lg bg-[#226B52] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#153F35]"
+                className="mt-5 inline-block rounded-lg bg-[#226B52] px-6 py-3 text-sm font-semibold text-white hover:bg-[#153F35]"
               >
                 Continue to Homepage
               </Link>
             </div>
           ) : (
-            <form onSubmit={handleRegister} className="space-y-5">
-
-              {/* Name */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
-                >
-                  Full Name
-                </label>
-
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
-                >
-                  Email Address
-                </label>
-
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
-                />
-              </div>
-
-              {/* Password */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
-                >
-                  Password
-                </label>
-
-                <div className="relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    minLength={6}
-                    required
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#226B52]"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-
-                <p className="mt-2 text-xs leading-5 text-gray-500">
-                  Minimum 6 characters, including uppercase and lowercase letters.
-                </p>
-              </div>
-
-              {/* Error Message */}
-              {errorMessage && (
-                <div
-                  role="alert"
-                  className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-                >
-                  {errorMessage}
-                </div>
-              )}
-
-              {/* Submit Button */}
+            <>
+              {/* Google Sign Up */}
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-lg bg-[#226B52] px-4 py-3 font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+                onClick={handleGoogleSignup}
+                disabled={isGoogleSubmitting || isSubmitting}
+                className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                <span className="text-lg font-bold">G</span>
+
+                {isGoogleSubmitting
+                  ? "Connecting to Google..."
+                  : "Sign Up with Google"}
               </button>
-            </form>
+
+              {/* Divider */}
+              <div className="my-6 flex items-center gap-4">
+                <div className="h-px flex-1 bg-gray-200" />
+
+                <span className="text-xs text-gray-400">
+                  OR REGISTER WITH EMAIL
+                </span>
+
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+
+              {/* Email Registration Form */}
+              <form onSubmit={handleRegister} className="space-y-5">
+
+                {/* Name */}
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  >
+                    Full Name
+                  </label>
+
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  >
+                    Email Address
+                  </label>
+
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  />
+                </div>
+                {/* Password */}
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  >
+                    Password
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a password"
+                      autoComplete="new-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      minLength={6}
+                      required
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 pr-12 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#226B52]"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  <p className="mt-2 text-xs leading-5 text-gray-500">
+                    Minimum 6 characters, including uppercase and lowercase letters.
+                  </p>
+                </div>
+
+                {/* Error Message */}
+                {errorMessage && (
+                  <div
+                    role="alert"
+                    className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  >
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting || isGoogleSubmitting}
+                  className="w-full rounded-lg bg-[#226B52] px-4 py-3 font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isSubmitting
+                    ? "Creating Account..."
+                    : "Create Account"}
+                </button>
+              </form>
+            </>
           )}
 
           {/* Login Link */}
