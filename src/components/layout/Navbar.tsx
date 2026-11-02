@@ -35,7 +35,7 @@ const navLinks = [
   },
   {
     name: "Upcoming Events",
-    href: "/upcoming-events",
+    href: "/events",
   },
   {
     name: "How It Works",
