@@ -105,7 +105,7 @@ export default function LoginPage() {
           <button
             type="button"
             disabled
-            className="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-500 opacity-70"
+            className="flex w-full cursor-allowed hover:text-[#153F35] items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-500 opacity-70"
           >
             <span className="text-lg font-bold">G</span>
             Continue with Google
