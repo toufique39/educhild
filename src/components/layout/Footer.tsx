@@ -125,10 +125,6 @@ export default function Footer() {
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
 
           <p className="text-xs text-white/60">
-            © {new Date().getFullYear()} EduChild. All rights reserved.
-          </p>
-
-          <p className="text-xs text-white/60">
             Made with care for a brighter tomorrow.
           </p>
 

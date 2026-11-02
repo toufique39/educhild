@@ -1,16 +1,15 @@
 
-type EduChildEvent = Record<string, unknown> & {
-    _id: string;
-    title: string;
-    description: string;
-    startDate: string;
-    endDate: string;
-    location: string;
-    imageUrl: string;
-    createdAt: string;
-    updatedAt: string;
+export type EduChildEvent = {
+  _id: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  eventType: string;
+  eventDate: string;
+  location?: {
     area?: string;
     city?: string;
+  };
 };
 
 const EVENTS_API_URL =

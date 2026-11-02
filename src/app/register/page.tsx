@@ -14,7 +14,6 @@ import { authClient } from "@/lib/auth-client";
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +25,6 @@ export default function RegisterPage() {
   // Handle registration
   const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setErrorMessage("");
 
     // Password validation
@@ -53,7 +51,7 @@ export default function RegisterPage() {
         name,
         email,
         password,
-        image: photoURL,
+        callbackURL: "/",
       });
 
       if (error) {
@@ -63,6 +61,8 @@ export default function RegisterPage() {
 
       // Registration successful
       setIsSuccess(true);
+
+      console.log("User registered successfully:", { name, email });
 
     } catch (error) {
       console.error("Registration error:", error);
@@ -157,27 +157,6 @@ export default function RegisterPage() {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
-                />
-              </div>
-
-              {/* Photo URL */}
-              <div>
-                <label
-                  htmlFor="photoURL"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
-                >
-                  Profile Photo URL
-                </label>
-
-                <input
-                  id="photoURL"
-                  name="photoURL"
-                  type="url"
-                  placeholder="https://example.com/photo.jpg"
-                  value={photoURL}
-                  onChange={(e) => setPhotoURL(e.target.value)}
                   required
                   className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
                 />

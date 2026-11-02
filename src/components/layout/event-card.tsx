@@ -1,19 +1,7 @@
 import Link from "next/link";
 import { CalendarDays, Clock3, MapPin, ArrowUpRight } from "lucide-react";
 
-import { formatEventDate, formatEventTime } from "@/lib/events";
-
-interface EduChildEvent {
-  _id: string;
-  title: string;
-  thumbnailUrl: string;
-  eventType: string;
-  eventDate: string;
-  location?: {
-    area?: string;
-    city?: string;
-  };
-}
+import { formatEventDate, formatEventTime, type EduChildEvent } from "@/lib/events";
 
 interface EventCardProps {
   event: EduChildEvent;
