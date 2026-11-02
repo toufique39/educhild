@@ -3,320 +3,379 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-
+import { usePathname, useRouter } from "next/navigation";
 import {
-  BookOpenCheck,
+  HeartHandshake,
   Menu,
   X,
   ChevronDown,
-  UserRound,
-  CalendarPlus,
-  CalendarCheck,
-  ListChecks,
   LogOut,
+  PlusCircle,
+  ClipboardList,
+  CalendarCheck,
 } from "lucide-react";
 
-// User type for future Better Auth integration
-export interface NavbarUser {
-  name: string;
-  image?: string | null;
-}
+import { authClient } from "@/lib/auth-client";
 
-interface NavbarProps {
-  user?: NavbarUser | null;
-  onSignOut?: () => void;
-}
+export default function Navbar() {
+  const router = useRouter();
+  const pathname = usePathname();
 
-const navLinks = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Upcoming Events",
-    href: "/events",
-  },
-  {
-    name: "How It Works",
-    href: "/#how-it-works",
-  },
-];
+  // Better Auth session
+  const { data: session, isPending } = authClient.useSession();
 
-const profileLinks = [
-  {
-    name: "Create Event",
-    href: "/create-event",
-    icon: CalendarPlus,
-  },
-  {
-    name: "Manage Events",
-    href: "/manage-events",
-    icon: ListChecks,
-  },
-  {
-    name: "Joined Events",
-    href: "/joined-events",
-    icon: CalendarCheck,
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    icon: UserRound,
-  },
-];
+  const user = session?.user;
 
-export default function Navbar({
-  user = null,
-  onSignOut,
-}: NavbarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
+  // UI states
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
 
-  const closeMobileMenu = () => {
-    setMobileOpen(false);
+  // Navigation links
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Upcoming Events", href: "/events" },
+    { name: "How It Works", href: "/#how-it-works" },
+  ];
+
+  // Generate user initials
+  const getInitials = (name: string) => {
+    return name
+      .trim()
+      .split(/\s+/)
+      .map((part) => part.charAt(0))
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
   };
 
+  // Logout handler
+  const handleLogout = async () => {
+    setLogoutError("");
+
+    try {
+      setIsLoggingOut(true);
+
+      await authClient.signOut();
+
+      setIsProfileOpen(false);
+      setIsMobileMenuOpen(false);
+
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout error:", error);
+
+      setLogoutError(
+        error instanceof Error
+          ? error.message
+          : "Unable to log out. Please try again."
+      );
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Check active navigation link
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    if (href === "/#how-it-works") return false;
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  // Navigation link styles
+  const getLinkClass = (href: string) =>
+    `text-sm font-medium transition-colors ${
+      isActive(href)
+        ? "text-[#226B52]"
+        : "text-[#1E2E27] hover:text-[#226B52]"
+    }`;
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur">
+      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-
-        {/* Brand Logo */}
+        {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3"
-          aria-label="EduChild Home"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="flex shrink-0 items-center gap-2"
         >
-          <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <BookOpenCheck size={25} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#226B52] text-white">
+            <HeartHandshake className="h-6 w-6" />
           </div>
 
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-              EduChild
-            </h1>
-
-            <p className="text-xs text-muted-foreground">
-              Growing Together
-            </p>
-          </div>
+          <span className="text-xl font-bold tracking-tight text-[#153F35]">
+            EduChild
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-7 lg:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              className={getLinkClass(link.href)}
             >
               {link.name}
             </Link>
           ))}
-        </nav>
+        </div>
 
         {/* Desktop Authentication */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 md:flex">
+          {isPending ? (
+            <div className="h-10 w-28 animate-pulse rounded-lg bg-gray-100" />
+          ) : user ? (
+            /* Logged-in User Profile */
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileOpen(!isProfileOpen);
+                  setLogoutError("");
+                }}
+                title={user.name}
+                aria-expanded={isProfileOpen}
+                className="flex items-center gap-2 rounded-full border border-gray-200 py-1.5 pl-2 pr-3 transition hover:bg-gray-50"
+              >
+                {user.image ? (
+                  <img
+                    src={user.image}
+                    alt={`${user.name} profile`}
+                    className="h-9 w-9 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
+                    {getInitials(user.name || "User")}
+                  </div>
+                )}
 
-          {!user ? (
+                <span className="max-w-28 truncate text-sm font-semibold text-[#153F35]">
+                  {user.name || "Volunteer"}
+                </span>
+
+                <ChevronDown
+                  className={`h-4 w-4 text-gray-500 transition-transform ${
+                    isProfileOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Profile Dropdown */}
+              {isProfileOpen && (
+                <div className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+
+                  <div className="border-b border-gray-100 px-4 py-4">
+                    <p className="truncate text-sm font-semibold text-[#153F35]">
+                      {user.name}
+                    </p>
+
+                    <p className="mt-1 truncate text-xs text-gray-500">
+                      {user.email}
+                    </p>
+                  </div>
+
+                  <div className="p-2">
+                    <Link
+                      href="/create-event"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                    >
+                      <PlusCircle className="h-4 w-4" />
+                      Create Event
+                    </Link>
+
+                    <Link
+                      href="/manage-events"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                    >
+                      <ClipboardList className="h-4 w-4" />
+                      Manage Events
+                    </Link>
+
+                    <Link
+                      href="/joined-events"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                    >
+                      <CalendarCheck className="h-4 w-4" />
+                      Joined Events
+                    </Link>
+                  </div>
+
+                  {logoutError && (
+                    <p className="px-4 pb-2 text-xs text-red-600">
+                      {logoutError}
+                    </p>
+                  )}
+
+                  <div className="border-t border-gray-100 p-2">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                    >
+                      <LogOut className="h-4 w-4" />
+
+                      {isLoggingOut ? "Logging out..." : "Logout"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Guest Navigation */
             <>
               <Link
                 href="/login"
-                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-secondary"
+                className="rounded-lg px-4 py-2 text-sm font-semibold text-[#226B52] transition hover:bg-[#226B52]/10"
               >
                 Login
               </Link>
 
               <Link
                 href="/register"
-                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-[#153F35]"
+                className="rounded-lg bg-[#226B52] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#153F35]"
               >
                 Join as Volunteer
               </Link>
             </>
-          ) : (
-            <div className="relative">
-
-              <button
-                type="button"
-                title={user.name}
-                onClick={() => setProfileOpen(!profileOpen)}
-                aria-expanded={profileOpen}
-                className="flex items-center gap-2 rounded-full border border-border p-1.5 pr-3 transition hover:bg-secondary"
-              >
-                {user.image ? (
-                  <Image
-                    src={user.image}
-                    alt={user.name}
-                    width={36}
-                    height={36}
-                    unoptimized
-                    className="size-9 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-
-                <span className="max-w-32 truncate text-sm font-semibold">
-                  {user.name}
-                </span>
-
-                <ChevronDown size={16} />
-              </button>
-
-              {profileOpen && (
-                <div className="absolute right-0 top-14 w-56 overflow-hidden rounded-xl border border-border bg-card p-2 shadow-lg">
-
-                  <div className="border-b border-border px-3 py-2">
-                    <p className="truncate text-sm font-semibold">
-                      {user.name}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground">
-                      Your account
-                    </p>
-                  </div>
-
-                  {profileLinks.map((link) => {
-                    const Icon = link.icon;
-
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition hover:bg-secondary"
-                      >
-                        <Icon size={17} />
-                        {link.name}
-                      </Link>
-                    );
-                  })}
-
-                  <div className="mt-1 border-t border-border pt-1">
-                    <button
-                      type="button"
-                      disabled={!onSignOut}
-                      onClick={onSignOut}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-destructive transition hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <LogOut size={17} />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              )}
-
-            </div>
           )}
         </div>
 
         {/* Mobile Menu Button */}
         <button
           type="button"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-          aria-expanded={mobileOpen}
-          className="rounded-lg p-2 transition hover:bg-secondary lg:hidden"
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMobileMenuOpen}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="rounded-lg p-2 text-[#153F35] transition hover:bg-gray-100 md:hidden"
         >
-          {mobileOpen ? <X size={25} /> : <Menu size={25} />}
+          {isMobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
-
-      </div>
+      </nav>
 
       {/* Mobile Navigation */}
-      {mobileOpen && (
-        <div className="border-t border-border bg-background px-4 py-5 shadow-lg lg:hidden">
-
-          <nav className="flex flex-col gap-2">
+      {isMobileMenuOpen && (
+        <div className="border-t border-gray-100 bg-white px-4 py-5 shadow-lg md:hidden">
+          <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={closeMobileMenu}
-                className="rounded-lg px-4 py-3 text-sm font-medium transition hover:bg-secondary hover:text-primary"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`rounded-lg px-4 py-3 ${getLinkClass(link.href)}`}
               >
                 {link.name}
               </Link>
             ))}
-          </nav>
+          </div>
 
-          {user ? (
-            <div className="mt-4 border-t border-border pt-4">
+          <div className="mt-4 border-t border-gray-100 pt-4">
+            {isPending ? (
+              <div className="h-10 animate-pulse rounded-lg bg-gray-100" />
+            ) : user ? (
+              <div>
+                {/* Mobile User Information */}
+                <div className="mb-4 flex items-center gap-3 px-3">
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={`${user.name} profile`}
+                      className="h-11 w-11 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
+                      {getInitials(user.name || "User")}
+                    </div>
+                  )}
 
-              <div className="mb-3 flex items-center gap-3 px-3">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary font-semibold text-white">
-                  {user.name.charAt(0).toUpperCase()}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-[#153F35]">
+                      {user.name}
+                    </p>
+
+                    <p className="truncate text-xs text-gray-500">
+                      {user.email}
+                    </p>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-sm font-semibold">
-                    {user.name}
+                <Link
+                  href="/create-event"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  Create Event
+                </Link>
+
+                <Link
+                  href="/manage-events"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  Manage Events
+                </Link>
+
+                <Link
+                  href="/joined-events"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  <CalendarCheck className="h-4 w-4" />
+                  Joined Events
+                </Link>
+
+                {logoutError && (
+                  <p className="px-4 py-2 text-xs text-red-600">
+                    {logoutError}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    Your account
-                  </p>
-                </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {isLoggingOut ? "Logging out..." : "Logout"}
+                </button>
               </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-lg border border-[#226B52] px-4 py-3 text-center text-sm font-semibold text-[#226B52]"
+                >
+                  Login
+                </Link>
 
-              {profileLinks.map((link) => {
-                const Icon = link.icon;
-
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm hover:bg-secondary"
-                  >
-                    <Icon size={17} />
-                    {link.name}
-                  </Link>
-                );
-              })}
-
-              <button
-                type="button"
-                disabled={!onSignOut}
-                onClick={() => {
-                  closeMobileMenu();
-                  onSignOut?.();
-                }}
-                className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm text-destructive hover:bg-destructive/10 disabled:opacity-50"
-              >
-                <LogOut size={17} />
-                Sign Out
-              </button>
-
-            </div>
-          ) : (
-            <div className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
-
-              <Link
-                href="/login"
-                onClick={closeMobileMenu}
-                className="rounded-xl border border-border px-4 py-3 text-center text-sm font-semibold"
-              >
-                Login
-              </Link>
-
-              <Link
-                href="/register"
-                onClick={closeMobileMenu}
-                className="rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
-              >
-                Join as Volunteer
-              </Link>
-
-            </div>
-          )}
-
+                <Link
+                  href="/register"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-lg bg-[#226B52] px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Join as Volunteer
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
-
     </header>
   );
 }
