@@ -34,6 +34,10 @@ const initialFormData: EventFormData = {
   eventDate: "",
 };
 
+const EVENTS_API_URL =
+  process.env.NEXT_PUBLIC_EVENTS_API_URL ||
+  "http://localhost:3000/upcomming-events";
+
 function getMinDateTime() {
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -50,15 +54,14 @@ export default function CreateEventPage() {
   const [formData, setFormData] =
     useState<EventFormData>(initialFormData);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Protect the page from guest users (client-side navigation guard)
+  // Redirect guest users
   useEffect(() => {
     if (!isPending && !session) {
-      router.replace(
-        "/login?callbackUrl=%2Fcreate-event"
-      );
+      router.replace("/login?callbackUrl=%2Fcreate-event");
     }
   }, [isPending, session, router]);
 
@@ -76,12 +79,17 @@ export default function CreateEventPage() {
     setSuccessMessage("");
   };
 
-  // Handle form submission
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  // Submit event
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (!session) {
+      setErrorMessage("Please login before creating an event.");
+      return;
+    }
 
     // Validate future event date
     const selectedDate = new Date(formData.eventDate);
@@ -95,11 +103,72 @@ export default function CreateEventPage() {
       return;
     }
 
-    // Form validation completed.
-    // Backend API integration will be added in the next step.
-    setSuccessMessage(
-      "Your event information passed validation. It is ready for submission."
-    );
+    try {
+      setIsSubmitting(true);
+
+      // Step 1: Get JWT from Better Auth
+      const { data: tokenData, error: tokenError } =
+        await authClient.token();
+
+      if (tokenError || !tokenData?.token) {
+        throw new Error(
+          tokenError?.message || "Unable to get authentication token."
+        );
+      }
+
+      // Step 2: Prepare event data
+      const eventPayload = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        eventType: formData.eventType,
+        thumbnailUrl: formData.thumbnailUrl.trim(),
+
+        location: {
+          area: formData.area.trim(),
+          city: formData.city.trim(),
+        },
+
+        // Convert local datetime to UTC ISO string
+        eventDate: selectedDate.toISOString(),
+      };
+
+      // Step 3: Send authenticated request to Express
+      const response = await fetch(EVENTS_API_URL, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData.token}`,
+        },
+
+        body: JSON.stringify(eventPayload),
+      });
+
+      // Step 4: Read backend response
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to create event."
+        );
+      }
+
+      // Step 5: Show success
+      setSuccessMessage("Your event has been created successfully!");
+
+      setFormData(initialFormData);
+
+    } catch (error) {
+      console.error("Create event error:", error);
+
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Loading state
@@ -111,7 +180,6 @@ export default function CreateEventPage() {
     );
   }
 
-  // Redirecting guest users
   if (!session) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
@@ -170,16 +238,14 @@ export default function CreateEventPage() {
                 type="text"
                 placeholder="Example: Winter Clothes Donation Drive"
                 value={formData.title}
-                onChange={(e) =>
-                  handleChange("title", e.target.value)
-                }
+                onChange={(e) => handleChange("title", e.target.value)}
                 required
                 maxLength={100}
                 className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
               />
             </div>
 
-            {/* Event Description */}
+            {/* Description */}
             <div>
               <label
                 htmlFor="description"
@@ -191,7 +257,7 @@ export default function CreateEventPage() {
               <textarea
                 id="description"
                 rows={5}
-                placeholder="Describe your event, its purpose, and how volunteers can participate..."
+                placeholder="Describe your event and its purpose..."
                 value={formData.description}
                 onChange={(e) =>
                   handleChange("description", e.target.value)
@@ -255,7 +321,7 @@ export default function CreateEventPage() {
               />
             </div>
 
-            {/* Event Location */}
+            {/* Location */}
             <div>
               <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#1E2E27]">
                 <MapPin className="h-4 w-4 text-[#226B52]" />
@@ -263,8 +329,6 @@ export default function CreateEventPage() {
               </h2>
 
               <div className="grid gap-4 sm:grid-cols-2">
-
-                {/* Area */}
                 <div>
                   <label
                     htmlFor="area"
@@ -278,15 +342,12 @@ export default function CreateEventPage() {
                     type="text"
                     placeholder="Example: Shyamnagar"
                     value={formData.area}
-                    onChange={(e) =>
-                      handleChange("area", e.target.value)
-                    }
+                    onChange={(e) => handleChange("area", e.target.value)}
                     required
                     className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
                   />
                 </div>
 
-                {/* City */}
                 <div>
                   <label
                     htmlFor="city"
@@ -300,9 +361,7 @@ export default function CreateEventPage() {
                     type="text"
                     placeholder="Example: Satkhira"
                     value={formData.city}
-                    onChange={(e) =>
-                      handleChange("city", e.target.value)
-                    }
+                    onChange={(e) => handleChange("city", e.target.value)}
                     required
                     className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
                   />
@@ -346,7 +405,8 @@ export default function CreateEventPage() {
 
               <p className="mt-1 break-all text-sm font-semibold text-[#153F35]">
                 {session.user.email}
-              </p>
+                </p>
+
             </div>
 
             {/* Error Message */}
@@ -365,17 +425,25 @@ export default function CreateEventPage() {
                 role="status"
                 className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
               >
-                {successMessage}
+                <p className="font-semibold">{successMessage}</p>
+
+                <Link
+                  href="/events"
+                  className="mt-2 inline-block font-semibold underline"
+                >
+                  View Upcoming Events
+                </Link>
               </div>
             )}
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35]"
+              disabled={isSubmitting}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Send className="h-4 w-4" />
-              Create Event
+              {isSubmitting ? "Creating Event..." : "Create Event"}
             </button>
 
           </form>

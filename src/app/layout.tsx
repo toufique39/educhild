@@ -1,24 +1,15 @@
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { Suspense } from "react";
 
 
 
-const geistSans = Geist({
 
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -37,9 +28,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`antialiased`}
       >
-        <Navbar></Navbar>
+        <Suspense
+  fallback={
+    <div
+      className="h-18 border-b border-gray-100 bg-white"
+      aria-hidden="true"
+    />
+  }
+>
+  <Navbar />
+</Suspense>
         {children}
           <Footer></Footer>
         <Toaster position="top-right" richColors />

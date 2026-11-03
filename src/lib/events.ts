@@ -63,18 +63,21 @@ export async function fetchEventById(
 
   const response = await fetch(url, {
     cache: "no-store",
-  });
+  }
+
+  )
+       
 
   if (response.status === 404) {
     return null;
   }
 
+ 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch event: ${response.status}`
+      `Failed to fetch event by ID: ${response.status}`
     );
   }
-
   const result: {
     success: boolean;
     data: EduChildEvent;

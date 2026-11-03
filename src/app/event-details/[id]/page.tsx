@@ -1,6 +1,8 @@
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import JoinEventButton from "@/components/events/join-event-button";
 import {
   ArrowLeft,
   CalendarDays,
@@ -15,11 +17,41 @@ import {
   formatEventTime,
 } from "@/lib/events";
 
-export default async function EventDetailsPage({
-  params,
-}: {
+type EventDetailsPageProps = {
   params: Promise<{ id: string }>;
-}) {
+};
+
+// Loading Skeleton
+function EventDetailsSkeleton() {
+  return (
+    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl animate-pulse">
+        <div className="mb-8 h-5 w-40 rounded bg-gray-200" />
+
+        <div className="grid gap-8 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <div className="aspect-video rounded-2xl bg-gray-200" />
+
+            <div className="rounded-2xl bg-white p-8">
+              <div className="mb-5 h-6 w-28 rounded bg-gray-200" />
+              <div className="mb-4 h-9 w-3/4 rounded bg-gray-200" />
+              <div className="h-4 w-full rounded bg-gray-200" />
+              <div className="mt-3 h-4 w-2/3 rounded bg-gray-200" />
+            </div>
+          </div>
+
+          <div className="h-64 rounded-2xl bg-gray-200" />
+        </div>
+      </div>
+    </main>
+  );
+}
+
+// Event Details Content
+async function EventDetailsContent({
+  params,
+}: EventDetailsPageProps) {
+  // Resolve dynamic route parameter inside Suspense
   const { id } = await params;
 
   let event;
@@ -37,7 +69,8 @@ export default async function EventDetailsPage({
           </h1>
 
           <p className="mt-3 text-sm text-gray-500">
-            Something went wrong while loading this event. Please try again later.
+            Something went wrong while loading this event.
+            Please try again later.
           </p>
 
           <Link
@@ -71,29 +104,33 @@ export default async function EventDetailsPage({
   return (
     <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
+
         {/* Back Navigation */}
         <Link
           href="/events"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] transition-colors hover:text-[#153F35]"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Upcoming Events
         </Link>
 
         <div className="grid gap-8 lg:grid-cols-3">
+
           {/* Main Event Information */}
           <div className="lg:col-span-2">
+
             {/* Event Image */}
             <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
               <img
                 src={event.thumbnailUrl}
                 alt={event.title}
-                className="aspect-[16/9] w-full object-cover"
+                className="aspect-video w-full object-cover"
               />
             </div>
 
             {/* Event Details */}
             <div className="mt-6 rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+
               <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
                 {eventType}
               </span>
@@ -102,14 +139,19 @@ export default async function EventDetailsPage({
                 {event.title}
               </h1>
 
+              {/* Date, Time and Location */}
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
+
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#226B52]/10 text-[#226B52]">
                     <CalendarDays className="h-5 w-5" />
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">Event Date</p>
+                    <p className="text-xs text-gray-500">
+                      Event Date
+                    </p>
+
                     <p className="text-sm font-semibold text-[#1E2E27]">
                       {formatEventDate(event.eventDate)}
                     </p>
@@ -122,7 +164,10 @@ export default async function EventDetailsPage({
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">Event Time</p>
+                    <p className="text-xs text-gray-500">
+                      Event Time
+                    </p>
+
                     <p className="text-sm font-semibold text-[#1E2E27]">
                       {formatEventTime(event.eventDate)}
                     </p>
@@ -135,7 +180,10 @@ export default async function EventDetailsPage({
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">Event Location</p>
+                    <p className="text-xs text-gray-500">
+                      Event Location
+                    </p>
+
                     <p className="text-sm font-semibold text-[#1E2E27]">
                       {location || "Location not specified"}
                     </p>
@@ -159,6 +207,7 @@ export default async function EventDetailsPage({
           {/* Join Event Sidebar */}
           <aside>
             <div className="sticky top-24 rounded-2xl border border-border bg-white p-6 shadow-sm">
+
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3B85D]/20 text-[#153F35]">
                 <HandHeart className="h-6 w-6" />
               </div>
@@ -168,25 +217,26 @@ export default async function EventDetailsPage({
               </h2>
 
               <p className="mt-3 text-sm leading-7 text-gray-500">
-                Join hands with your community and help create a positive
-                impact through this event.
+                Join hands with your community and help create
+                a positive impact through this event.
               </p>
 
-              <Link
-                href={`/login?callbackUrl=${encodeURIComponent(`/event-details/${event._id}`)}`}
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#153F35]"
-              >
-                <HandHeart className="h-4 w-4" />
-                Join Event
-              </Link>
-
-              <p className="mt-4 text-center text-xs leading-5 text-gray-400">
-                Please log in to participate in this event.
-              </p>
+             <JoinEventButton eventId={event._id} />
             </div>
           </aside>
         </div>
       </div>
     </main>
+  );
+}
+
+// Page Component
+export default function EventDetailsPage({
+  params,
+}: EventDetailsPageProps) {
+  return (
+    <Suspense fallback={<EventDetailsSkeleton />}>
+      <EventDetailsContent params={params} />
+    </Suspense>
   );
 }

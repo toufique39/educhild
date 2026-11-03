@@ -1,112 +1,63 @@
 
 import Link from "next/link";
-import { ArrowRight, CalendarX } from "lucide-react";
+import { CalendarDays, ArrowRight } from "lucide-react";
 
 import { fetchUpcomingEvents } from "@/lib/events";
-import { EventCard } from "../layout/event-card";
-
+import { EventCard } from "@/components/layout/event-card";
 
 export default async function UpcomingEventsSection() {
-  let events;
-
-  try {
-    // Fetch latest six upcoming events from MongoDB API
-    events = await fetchUpcomingEvents(6);
-  } catch (error) {
-    console.error("Homepage events error:", error);
-
-    return (
-      <section className="bg-background px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl text-center">
-          <h2 className="text-3xl font-bold text-foreground">
-            Upcoming Events
-          </h2>
-
-          <p className="mt-5 text-muted-foreground">
-            Unable to load events right now. Please try again later.
-          </p>
-
-          <Link
-            href="/"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-          >
-            Try Again
-            <ArrowRight size={17} />
-          </Link>
-        </div>
-      </section>
-    );
-  }
+  // Fetch outside try/catch.
+  // Suspense in page.tsx will handle the loading state.
+  const events = await fetchUpcomingEvents(6);
 
   return (
-    <section
-      id="upcoming-events"
-      className="bg-background px-4 py-20 sm:px-6 lg:px-8"
-    >
+    <section className="bg-[#F8FAF7] px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
-        {/* Section Header */}
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-
-          <div className="max-w-2xl">
-            <span className="text-sm font-bold tracking-widest text-primary uppercase">
-              Discover & Participate
+        {/* Section Heading */}
+        <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+              Make an Impact
             </span>
 
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Upcoming Events
+            <h2 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+              Upcoming Community Events
             </h2>
 
-            <p className="mt-4 text-base leading-7 text-muted-foreground">
-              Explore meaningful educational activities and
-              find opportunities to support children in your
-              community.
+            <p className="mt-3 max-w-xl text-sm leading-7 text-gray-500">
+              Discover meaningful events and join hands with
+              your community to create positive change.
             </p>
           </div>
 
-          <p className="shrink-0 text-sm font-medium text-muted-foreground">
-            {events.length} {events.length === 1 ? "Event" : "Events"} Available
-          </p>
-
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+          >
+            View All Events
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        {/* Event Grid */}
-        {events.length > 0 ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <EventCard key={event._id} event={event} />
-            ))}
-          </div>
-        ) : (
-          /* Empty State */
-          <div className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-border bg-card px-6 py-16 text-center">
+        {/* Event Listing */}
+        {events.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+            <CalendarDays className="mx-auto mb-4 h-12 w-12 text-[#226B52]" />
 
-            <div className="flex size-16 items-center justify-center rounded-full bg-secondary">
-              <CalendarX className="size-8 text-primary" />
-            </div>
-
-            <h3 className="mt-5 text-xl font-bold text-foreground">
+            <h3 className="text-xl font-semibold text-[#153F35]">
               No Upcoming Events
             </h3>
 
-            <p className="mt-3 max-w-md text-sm leading-7 text-muted-foreground">
-              There are no upcoming educational events at the moment.
-              Please check back soon for new opportunities.
+            <p className="mt-2 text-sm text-gray-500">
+              Check back later for new community events.
             </p>
-
           </div>
-        )}
-
-        {/* View All Events */}
-        {events.length > 0 && (
-          <div className="mt-12 flex justify-center">
-            <Link
-              href="/events"
-              className="inline-flex items-center gap-2 rounded-xl border border-primary px-6 py-3.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
-            >
-              Explore All Events
-              <ArrowRight size={18} />
-            </Link>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {events.map((event) => (
+              <EventCard key={event._id} event={event} />
+            ))}
           </div>
         )}
 
