@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, HeartHandshake } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -48,6 +49,7 @@ export default function LoginPage() {
           : "/";
 
       // Redirect after successful login
+      toast.success("Logged in successfully! Welcome back.");
       router.replace(nextPath);
       router.refresh();
 
@@ -59,6 +61,8 @@ export default function LoginPage() {
           ? error.message
           : "Something went wrong. Please try again."
       );
+
+      toast.error("Login failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -75,18 +79,22 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setErrorMessage(
-        error.message || "Google login failed. Please try again."
-      );
+      const message =
+        error.message || "Google login failed. Please try again.";
+
+      setErrorMessage(message);
+      toast.error(message);
     }
   } catch (error) {
     console.error("Google login error:", error);
 
-    setErrorMessage(
+    const message =
       error instanceof Error
         ? error.message
-        : "Something went wrong with Google login."
-    );
+        : "Something went wrong with Google login.";
+
+    setErrorMessage(message);
+    toast.error(message);
   } finally {
     setIsGoogleSubmitting(false);
   }

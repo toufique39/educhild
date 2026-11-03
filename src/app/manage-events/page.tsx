@@ -16,6 +16,7 @@ import {
   Loader2,
   ArrowLeft,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 import {
@@ -164,11 +165,13 @@ export default function ManageEventsPage() {
     } catch (error) {
       console.error("Manage events fetch error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to load your events."
-      );
+          : "Unable to load your events.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -287,14 +290,18 @@ export default function ManageEventsPage() {
       setEditingEventId(null);
       setEditForm(initialFormValues);
       setSuccessMessage("Event updated successfully!");
+
+      toast.success("Event updated successfully!");
     } catch (error) {
       console.error("Update event error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to update event."
-      );
+          : "Unable to update event.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsUpdating(false);
     }
@@ -335,14 +342,18 @@ export default function ManageEventsPage() {
 
       setConfirmDeleteId(null);
       setSuccessMessage("Event deleted successfully!");
+
+      toast.success("Event deleted successfully!");
     } catch (error) {
       console.error("Delete event error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to delete event."
-      );
+          : "Unable to delete event.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsDeleting(false);
     }

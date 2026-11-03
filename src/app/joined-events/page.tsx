@@ -11,6 +11,7 @@ import {
   PlusCircle,
   RefreshCw,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 import { EventCard } from "@/components/layout/event-card";
@@ -98,11 +99,13 @@ setEvents(result.data ?? []);
     } catch (error) {
       console.error("Joined events fetch error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to load your joined events."
-      );
+          : "Unable to load your joined events.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

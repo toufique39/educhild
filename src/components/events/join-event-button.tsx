@@ -1,10 +1,13 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { HandHeart, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  HandHeart,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -16,6 +19,10 @@ const EVENTS_API_URL =
   process.env.NEXT_PUBLIC_EVENTS_API_URL ||
   "http://localhost:3000/upcomming-events";
 
+const API_BASE_URL = new URL(EVENTS_API_URL).origin;
+
+const JOINED_EVENTS_API_URL = `${API_BASE_URL}/joined-events`;
+
 export default function JoinEventButton({
   eventId,
 }: JoinEventButtonProps) {
@@ -23,16 +30,93 @@ export default function JoinEventButton({
 
   const { data: session, isPending } = authClient.useSession();
 
+  const [isChecking, setIsChecking] = useState(true);
   const [isJoining, setIsJoining] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
+
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
+  // Check whether the current user has already joined
+  useEffect(() => {
+    if (isPending) return;
+
+    if (!session) {
+      // Avoid synchronous setState in effect body
+      Promise.resolve().then(() => {
+        setIsJoined(false);
+        setIsChecking(false);
+      });
+      return;
+    }
+
+    let isActive = true;
+
+    const checkJoinedStatus = async () => {
+      setIsChecking(true);
+
+      try {
+        // Get authenticated JWT
+        const { data, error } = await authClient.token();
+
+        if (error || !data?.token) {
+          throw new Error("Unable to verify your join status.");
+        }
+
+        // Fetch current user's joined events
+        const response = await fetch(JOINED_EVENTS_API_URL, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to check joined event status.");
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error("Invalid joined events response.");
+        }
+
+        // Check whether this event already exists in user's joined list
+        const alreadyJoined = result.data.some(
+          (event: { _id: string }) => event._id === eventId
+        );
+
+        if (isActive) {
+          setIsJoined(alreadyJoined);
+        }
+      } catch (error) {
+        console.error("Join status check error:", error);
+
+        if (isActive) {
+          setMessage("Unable to verify your participation status.");
+          setIsError(true);
+        }
+      } finally {
+        if (isActive) {
+          setIsChecking(false);
+        }
+      }
+    };
+
+    checkJoinedStatus();
+
+    return () => {
+      isActive = false;
+    };
+  }, [session?.user.id, isPending, eventId]);
+
+  // Handle Join Event
   const handleJoinEvent = async () => {
     setMessage("");
     setIsError(false);
 
-    // Redirect guest users to login
+    // Guest user redirect
     if (!session) {
       router.push(
         `/login?callbackUrl=${encodeURIComponent(
@@ -48,22 +132,21 @@ export default function JoinEventButton({
       setIsJoining(true);
 
       // Get Better Auth JWT
-      const { data: tokenData, error: tokenError } =
-        await authClient.token();
+      const { data, error } = await authClient.token();
 
-      if (tokenError || !tokenData?.token) {
+      if (error || !data?.token) {
         throw new Error(
-          tokenError?.message || "Unable to get authentication token."
+          error?.message || "Unable to get authentication token."
         );
       }
 
-      // Send authenticated join request
+      // Send Join Event Request
       const response = await fetch(
         `${EVENTS_API_URL}/${encodeURIComponent(eventId)}/join`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${tokenData.token}`,
+            Authorization: `Bearer ${data.token}`,
           },
         }
       );
@@ -88,6 +171,7 @@ export default function JoinEventButton({
       console.error("Join event error:", error);
 
       setIsError(true);
+
       setMessage(
         error instanceof Error
           ? error.message
@@ -103,13 +187,18 @@ export default function JoinEventButton({
       <button
         type="button"
         onClick={handleJoinEvent}
-        disabled={isPending || isJoining || isJoined}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={
+          isPending ||
+          isChecking ||
+          isJoining ||
+          isJoined
+        }
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending || isJoining ? (
+        {isPending || isChecking || isJoining ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {isPending ? "Checking..." : "Joining Event..."}
+            {isJoining ? "Joining Event..." : "Checking..."}
           </>
         ) : isJoined ? (
           <>
@@ -129,17 +218,13 @@ export default function JoinEventButton({
           role={isError ? "alert" : "status"}
           className={`mt-4 rounded-lg border px-3 py-3 text-center text-sm ${
             isError
-              ? "border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
-              : "border-green-200 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
+              ? "border-red-200 bg-red-50 text-red-700"
+              : "border-green-200 bg-green-50 text-green-700"
           }`}
         >
           {message}
         </div>
       )}
-
-      <p className="mt-4 text-center text-xs leading-5 text-muted-foreground">
-        Join your community and help create a positive impact.
-      </p>
     </div>
   );
 }

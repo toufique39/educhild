@@ -8,6 +8,7 @@ import {
   EyeOff,
   HeartHandshake,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -63,14 +64,18 @@ export default function RegisterPage() {
       }
 
       setIsSuccess(true);
+
+      toast.success("Account created successfully! Welcome to EduChild.");
     } catch (error) {
       console.error("Registration error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again."
-      );
+          : "Something went wrong. Please try again.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -89,18 +94,22 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        setErrorMessage(
-          error.message || "Google registration failed."
-        );
+        const message =
+          error.message || "Google registration failed.";
+
+        setErrorMessage(message);
+        toast.error(message);
       }
     } catch (error) {
       console.error("Google signup error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to register with Google."
-      );
+          : "Unable to register with Google.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsGoogleSubmitting(false);
     }

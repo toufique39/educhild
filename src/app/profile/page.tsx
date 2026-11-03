@@ -11,6 +11,7 @@ import {
   Save,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
@@ -101,14 +102,18 @@ export default function ProfilePage() {
       await refetch();
 
       setSuccessMessage("Your profile has been updated successfully!");
+
+      toast.success("Your profile has been updated successfully!");
     } catch (error) {
       console.error("Profile update error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again."
-      );
+          : "Something went wrong. Please try again.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsUpdating(false);
     }

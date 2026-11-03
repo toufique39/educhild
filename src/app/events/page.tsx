@@ -3,35 +3,20 @@ import { Suspense } from "react";
 import { CalendarDays } from "lucide-react";
 
 import { fetchUpcomingEvents } from "@/lib/events";
-import { EventCard } from "@/components/layout/event-card";
+import EventExplorer from "@/components/events/event-explorer";
 import { EventGridSkeleton } from "@/components/layout/event-grid-skeleton";
 
+// Fetch real events from backend
+async function UpcomingEventsContent() {
+  const events = await fetchUpcomingEvents();
 
-async function UpcomingEventsList() {
-    const events = await fetchUpcomingEvents();
-    if (events.length === 0) {
-      return (
-        <div className="text-center text-muted-foreground">
-          <CalendarDays className="mx-auto mb-4 h-8 w-8" />
-          <p>No upcoming events found.</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {events.map((event) => (
-          <EventCard key={event._id} event={event} />
-        ))}
-      </div>
-    );
-  }
-
-
+  return <EventExplorer events={events} />;
+}
 
 export default function UpcomingEventsPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-[#F8FAF7] dark:bg-[#0B1713]">
+
       {/* Page Header */}
       <section className="bg-[#153F35] px-4 py-16 text-center sm:px-6 lg:py-20">
         <div className="mx-auto max-w-3xl">
@@ -53,19 +38,27 @@ export default function UpcomingEventsPage() {
       {/* Events Listing */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-heading">
-              Explore Events
-            </h2>
 
-            <p className="mt-2 text-sm text-muted-foreground">
+          {/* Section Heading */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-6 w-6 text-[#226B52]" />
+
+              <h2 className="text-2xl font-bold text-[#153F35] dark:text-[#E5F2EA]">
+                Explore Events
+              </h2>
+            </div>
+
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Find an opportunity and make a difference.
             </p>
           </div>
 
+          {/* Search and Filter */}
           <Suspense fallback={<EventGridSkeleton count={6} />}>
-            <UpcomingEventsList />
+            <UpcomingEventsContent />
           </Suspense>
+
         </div>
       </section>
     </main>

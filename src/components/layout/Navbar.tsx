@@ -19,6 +19,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import ThemeToggle from "@/components/layout/theme-toggle";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const router = useRouter();
@@ -65,16 +66,20 @@ export default function Navbar() {
       setIsProfileOpen(false);
       setIsMobileMenuOpen(false);
 
+      toast.success("Logged out successfully. See you soon!");
+
       router.replace("/");
       router.refresh();
     } catch (error) {
       console.error("Logout error:", error);
 
-      setLogoutError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to log out. Please try again."
-      );
+          : "Unable to log out. Please try again.";
+
+      setLogoutError(message);
+      toast.error(message);
     } finally {
       setIsLoggingOut(false);
     }

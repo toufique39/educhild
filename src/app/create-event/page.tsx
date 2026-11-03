@@ -11,6 +11,7 @@ import {
   ImagePlus,
   Send,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -156,16 +157,20 @@ export default function CreateEventPage() {
       // Step 5: Show success
       setSuccessMessage("Your event has been created successfully!");
 
+      toast.success("Your event has been created successfully!");
+
       setFormData(initialFormData);
 
     } catch (error) {
       console.error("Create event error:", error);
 
-      setErrorMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again."
-      );
+          : "Something went wrong. Please try again.";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
