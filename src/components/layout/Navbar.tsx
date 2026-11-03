@@ -13,9 +13,11 @@ import {
   PlusCircle,
   ClipboardList,
   CalendarCheck,
+  UserRound,
 } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
@@ -143,10 +145,12 @@ export default function Navbar() {
                 className="flex items-center gap-2 rounded-full border border-gray-200 py-1.5 pl-2 pr-3 transition hover:bg-gray-50"
               >
                 {user.image ? (
-                  <img
+                  <Image
                     src={user.image}
                     alt={`${user.name} profile`}
                     className="h-9 w-9 rounded-full object-cover"
+                    height={30}
+                    width={30}
                   />
                 ) : (
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
@@ -178,6 +182,15 @@ export default function Navbar() {
                       {user.email}
                     </p>
                   </div>
+
+                  <Link
+  href="/profile"
+  onClick={() => setIsProfileOpen(false)}
+  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+>
+  <UserRound className="h-4 w-4" />
+  My Profile
+</Link>
 
                   <div className="p-2">
                     <Link
@@ -289,10 +302,12 @@ export default function Navbar() {
                 {/* Mobile User Information */}
                 <div className="mb-4 flex items-center gap-3 px-3">
                   {user.image ? (
-                    <img
+                    <Image
                       src={user.image}
                       alt={`${user.name} profile`}
                       className="h-11 w-11 rounded-full object-cover"
+                      width={44}
+                      height={44}
                     />
                   ) : (
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
@@ -310,6 +325,14 @@ export default function Navbar() {
                     </p>
                   </div>
                 </div>
+                <Link
+  href="/profile"
+  onClick={() => setIsProfileOpen(false)}
+  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+>
+  <UserRound className="h-4 w-4" />
+  My Profile
+</Link>
 
                 <Link
                   href="/create-event"
