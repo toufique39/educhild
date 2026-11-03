@@ -93,21 +93,21 @@ export default function LoginPage() {
 };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F8FAF7] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 
           {/* Header */}
           <div className="mb-7 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#226B52] text-white">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
               <HeartHandshake className="h-8 w-8" />
             </div>
 
-            <h1 className="mt-5 text-2xl font-bold text-[#153F35]">
+            <h1 className="mt-5 text-2xl font-bold text-heading">
               Welcome Back!
             </h1>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Log in to continue making a difference.
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Email Address
               </label>
@@ -133,7 +133,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -141,7 +141,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Password
               </label>
@@ -156,14 +156,14 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 pr-12 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#226B52]"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-brand-text"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -178,7 +178,7 @@ export default function LoginPage() {
             {errorMessage && (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
               >
                 {errorMessage}
               </div>
@@ -188,7 +188,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-lg bg-[#226B52] px-4 py-3 font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Logging In..." : "Log In"}
             </button>
@@ -196,11 +196,11 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-gray-200" />
-            <span className="text-xs text-gray-400">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground">
               OR CONTINUE WITH
             </span>
-            <div className="h-px flex-1 bg-gray-200" />
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           {/* Google Login - OAuth configuration pending */}
@@ -208,7 +208,7 @@ export default function LoginPage() {
   type="button"
   onClick={handleGoogleLogin}
   disabled={isGoogleSubmitting || isSubmitting}
-  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+  className="flex w-full items-center justify-center gap-3 rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
 >
   <span className="text-lg font-bold">G</span>
 
@@ -218,18 +218,18 @@ export default function LoginPage() {
 </button>
 
           {/* Register Link */}
-          <p className="mt-7 text-center text-sm text-gray-500">
+          <p className="mt-7 text-center text-sm text-muted-foreground">
             Donot have an account?{" "}
             <Link
               href="/register"
-              className="font-semibold text-[#226B52] hover:text-[#153F35]"
+              className="font-semibold text-brand-text hover:text-brand-text-hover"
             >
               Create Account
             </Link>
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
+        <p className="mt-6 text-center text-xs text-muted-foreground">
           Together, we can create a better future for every child.
         </p>
       </div>

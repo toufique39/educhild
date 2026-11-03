@@ -83,6 +83,14 @@ function toLocalDateTimeValue(value: string) {
   return date.toISOString().slice(0, 16);
 }
 
+// Minimum selectable datetime (now, in local input format)
+function getMinDateTime() {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+  return now.toISOString().slice(0, 16);
+}
+
 export default function ManageEventsPage() {
   const router = useRouter();
 
@@ -106,11 +114,7 @@ export default function ManageEventsPage() {
     useState<EventFormValues>(initialFormValues);
 
   const [isUpdating, setIsUpdating] = useState(false);
-  const [minimumEventDate] = useState(() => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().slice(0, 16);
-  });
+  const [minimumEventDate, setMinimumEventDate] = useState("");
 
   // Delete states
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(
@@ -196,6 +200,8 @@ export default function ManageEventsPage() {
       city: event.location?.city ?? "",
       eventDate: toLocalDateTimeValue(event.eventDate),
     });
+
+    setMinimumEventDate(getMinDateTime());
 
     setErrorMessage("");
     setSuccessMessage("");
@@ -345,10 +351,10 @@ export default function ManageEventsPage() {
   // Loading state
   if (isPending || isLoading) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-9 w-9 animate-spin text-[#226B52]" />
-          <p className="text-sm text-gray-500">
+          <Loader2 className="h-9 w-9 animate-spin text-brand-text" />
+          <p className="text-sm text-muted-foreground">
             Loading your events...
           </p>
         </div>
@@ -359,8 +365,8 @@ export default function ManageEventsPage() {
   // Redirecting guest users
   if (!session) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <p className="text-sm text-gray-500">
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
           Redirecting to login...
         </p>
       </main>
@@ -368,13 +374,13 @@ export default function ManageEventsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Back Navigation */}
         <Link
           href="/"
-          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -383,22 +389,22 @@ export default function ManageEventsPage() {
         {/* Page Header */}
         <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+            <span className="inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
               Your Dashboard
             </span>
 
-            <h1 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-bold text-heading sm:text-4xl">
               Manage Your Events
             </h1>
 
-            <p className="mt-3 text-sm leading-7 text-gray-500">
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
               View, update, and manage the community events you have created.
             </p>
           </div>
 
           <Link
             href="/create-event"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#153F35]"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
           >
             <PlusCircle className="h-4 w-4" />
             Create New Event
@@ -406,12 +412,12 @@ export default function ManageEventsPage() {
         </div>
 
         {/* Event Count */}
-        <div className="mb-7 rounded-xl border border-border bg-white p-5">
-          <p className="text-sm text-gray-500">
+        <div className="mb-7 rounded-xl border border-border bg-card p-5">
+          <p className="text-sm text-muted-foreground">
             Events Created by You
           </p>
 
-          <p className="mt-1 text-3xl font-bold text-[#226B52]">
+          <p className="mt-1 text-3xl font-bold text-brand-text">
             {events.length}
           </p>
         </div>
@@ -420,7 +426,7 @@ export default function ManageEventsPage() {
         {successMessage && (
           <div
             role="status"
-            className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+            className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
           >
             {successMessage}
           </div>
@@ -430,7 +436,7 @@ export default function ManageEventsPage() {
         {errorMessage && (
           <div
             role="alert"
-            className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
           >
             {errorMessage}
           </div>
@@ -438,20 +444,20 @@ export default function ManageEventsPage() {
 
         {/* Empty State */}
         {events.length === 0 && !errorMessage ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
-            <CalendarDays className="mx-auto mb-4 h-12 w-12 text-[#226B52]" />
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+            <CalendarDays className="mx-auto mb-4 h-12 w-12 text-brand-text" />
 
-            <h2 className="text-xl font-bold text-[#153F35]">
+            <h2 className="text-xl font-bold text-heading">
               You Havenot Created Any Events Yet
             </h2>
 
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-muted-foreground">
               Start an initiative and bring your community together.
             </p>
 
             <Link
               href="/create-event"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white hover:bg-[#153F35]"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             >
               <PlusCircle className="h-4 w-4" />
               Create Your First Event
@@ -463,7 +469,7 @@ export default function ManageEventsPage() {
             {events.map((event) => (
               <article
                 key={event._id}
-                className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md"
+                className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
               >
                 {/* Thumbnail */}
                 <div className="relative">
@@ -474,7 +480,7 @@ export default function ManageEventsPage() {
                     className="aspect-16/10 w-full object-cover"
                   />
 
-                  <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#226B52] shadow-sm">
+                  <span className="absolute left-4 top-4 rounded-full bg-card/95 px-3 py-1.5 text-xs font-semibold text-brand-text shadow-sm backdrop-blur-sm">
                     {event.eventType
                       .split("-")
                       .map(
@@ -487,27 +493,27 @@ export default function ManageEventsPage() {
 
                 {/* Event Information */}
                 <div className="flex flex-1 flex-col p-5">
-                  <h2 className="line-clamp-2 text-lg font-bold text-[#153F35]">
+                  <h2 className="line-clamp-2 text-lg font-bold text-heading">
                     {event.title}
                   </h2>
 
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-500">
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
                     {event.description}
                   </p>
 
                   <div className="mt-5 space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <CalendarDays className="h-4 w-4 text-[#226B52]" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <CalendarDays className="h-4 w-4 text-brand-text" />
                       {formatEventDate(event.eventDate)}
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Clock3 className="h-4 w-4 text-[#226B52]" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock3 className="h-4 w-4 text-brand-text" />
                       {formatEventTime(event.eventDate)}
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <MapPin className="h-4 w-4 text-[#226B52]" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4 text-brand-text" />
                       <span className="line-clamp-1">
                         {event.location?.area}, {event.location?.city}
                       </span>
@@ -519,7 +525,7 @@ export default function ManageEventsPage() {
                     <button
                       type="button"
                       onClick={() => handleEditClick(event)}
-                      className="flex items-center justify-center gap-2 rounded-lg border border-[#226B52] px-3 py-2.5 text-sm font-semibold text-[#226B52] transition hover:bg-[#226B52]/10"
+                      className="flex items-center justify-center gap-2 rounded-lg border border-primary px-3 py-2.5 text-sm font-semibold text-brand-text transition hover:bg-primary/10"
                     >
                       <Pencil className="h-4 w-4" />
                       Edit
@@ -532,7 +538,7 @@ export default function ManageEventsPage() {
                         setErrorMessage("");
                         setSuccessMessage("");
                       }}
-                      className="flex items-center justify-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                      className="flex items-center justify-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30"
                     >
                       <Trash2 className="h-4 w-4" />
                       Delete
@@ -541,12 +547,12 @@ export default function ManageEventsPage() {
 
                   {/* Delete Confirmation */}
                   {confirmDeleteId === event._id && (
-                    <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
-                      <p className="text-sm font-semibold text-red-800">
+                    <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
+                      <p className="text-sm font-semibold text-red-800 dark:text-red-300">
                         Delete this event?
                       </p>
 
-                      <p className="mt-1 text-xs text-red-600">
+                      <p className="mt-1 text-xs text-red-600 dark:text-red-400">
                         This action cannot be undone.
                       </p>
 
@@ -564,7 +570,7 @@ export default function ManageEventsPage() {
                           type="button"
                           onClick={() => setConfirmDeleteId(null)}
                           disabled={isDeleting}
-                          className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                          className="flex-1 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted dark:border-border dark:bg-card dark:text-foreground dark:hover:bg-muted"
                         >
                           Cancel
                         </button>
@@ -585,19 +591,19 @@ export default function ManageEventsPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-event-title"
-            className="my-8 w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl sm:p-8"
+            className="my-8 w-full max-w-2xl rounded-2xl bg-card p-6 shadow-xl sm:p-8"
           >
             {/* Modal Header */}
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2
                   id="edit-event-title"
-                  className="text-2xl font-bold text-[#153F35]"
+                  className="text-2xl font-bold text-heading"
                 >
                   Update Event
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Edit your event information below.
                 </p>
               </div>
@@ -607,7 +613,7 @@ export default function ManageEventsPage() {
                 onClick={() => setEditingEventId(null)}
                 disabled={isUpdating}
                 aria-label="Close edit form"
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+                className="rounded-lg p-2 text-muted-foreground hover:bg-muted"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -623,7 +629,7 @@ export default function ManageEventsPage() {
               <div>
                 <label
                   htmlFor="edit-title"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  className="mb-2 block text-sm font-semibold text-foreground"
                 >
                   Event Title
                 </label>
@@ -637,14 +643,14 @@ export default function ManageEventsPage() {
                   onChange={(e) =>
                     handleEditChange("title", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="edit-description"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  className="mb-2 block text-sm font-semibold text-foreground"
                 >
                   Description
                 </label>
@@ -658,14 +664,14 @@ export default function ManageEventsPage() {
                   onChange={(e) =>
                     handleEditChange("description", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="edit-event-type"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  className="mb-2 block text-sm font-semibold text-foreground"
                 >
                   Event Type
                 </label>
@@ -677,7 +683,7 @@ export default function ManageEventsPage() {
                   onChange={(e) =>
                     handleEditChange("eventType", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="cleanup">Community Cleanup</option>
                   <option value="plantation">Tree Plantation</option>
@@ -692,7 +698,7 @@ export default function ManageEventsPage() {
               <div>
                 <label
                   htmlFor="edit-thumbnail"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  className="mb-2 block text-sm font-semibold text-foreground"
                 >
                   Thumbnail URL
                 </label>
@@ -705,7 +711,7 @@ export default function ManageEventsPage() {
                   onChange={(e) =>
                     handleEditChange("thumbnailUrl", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                 />
               </div>
 
@@ -713,7 +719,7 @@ export default function ManageEventsPage() {
                 <div>
                   <label
                     htmlFor="edit-area"
-                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                    className="mb-2 block text-sm font-semibold text-foreground"
                   >
                     Area
                   </label>
@@ -726,14 +732,14 @@ export default function ManageEventsPage() {
                     onChange={(e) =>
                       handleEditChange("area", e.target.value)
                     }
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="edit-city"
-                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                    className="mb-2 block text-sm font-semibold text-foreground"
                   >
                     City
                   </label>
@@ -746,7 +752,7 @@ export default function ManageEventsPage() {
                     onChange={(e) =>
                       handleEditChange("city", e.target.value)
                     }
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
@@ -754,7 +760,7 @@ export default function ManageEventsPage() {
               <div>
                 <label
                   htmlFor="edit-date"
-                  className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                  className="mb-2 block text-sm font-semibold text-foreground"
                 >
                   Event Date & Time
                 </label>
@@ -768,26 +774,26 @@ export default function ManageEventsPage() {
                   onChange={(e) =>
                     handleEditChange("eventDate", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                  className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                 />
               </div>
 
               {errorMessage && (
                 <div
                   role="alert"
-                  className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
                 >
                   {errorMessage}
                 </div>
               )}
 
               {/* Modal Actions */}
-              <div className="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={() => setEditingEventId(null)}
                   disabled={isUpdating}
-                  className="rounded-lg border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+                  className="rounded-lg border border-border px-5 py-3 text-sm font-semibold text-foreground hover:bg-muted disabled:opacity-60"
                 >
                   Cancel
                 </button>
@@ -795,7 +801,7 @@ export default function ManageEventsPage() {
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isUpdating ? (
                     <>

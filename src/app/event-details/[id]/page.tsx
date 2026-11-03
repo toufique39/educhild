@@ -24,23 +24,23 @@ type EventDetailsPageProps = {
 // Loading Skeleton
 function EventDetailsSkeleton() {
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl animate-pulse">
-        <div className="mb-8 h-5 w-40 rounded bg-gray-200" />
+        <div className="mb-8 h-5 w-40 rounded bg-muted" />
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            <div className="aspect-video rounded-2xl bg-gray-200" />
+            <div className="aspect-video rounded-2xl bg-muted" />
 
-            <div className="rounded-2xl bg-white p-8">
-              <div className="mb-5 h-6 w-28 rounded bg-gray-200" />
-              <div className="mb-4 h-9 w-3/4 rounded bg-gray-200" />
-              <div className="h-4 w-full rounded bg-gray-200" />
-              <div className="mt-3 h-4 w-2/3 rounded bg-gray-200" />
+            <div className="rounded-2xl bg-card p-8">
+              <div className="mb-5 h-6 w-28 rounded bg-muted" />
+              <div className="mb-4 h-9 w-3/4 rounded bg-muted" />
+              <div className="h-4 w-full rounded bg-muted" />
+              <div className="mt-3 h-4 w-2/3 rounded bg-muted" />
             </div>
           </div>
 
-          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-muted" />
         </div>
       </div>
     </main>
@@ -62,20 +62,20 @@ async function EventDetailsContent({
     console.error("Failed to fetch event:", error);
 
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7] px-4">
+      <main className="flex min-h-[60vh] items-center justify-center bg-background px-4">
         <div className="max-w-md text-center">
-          <h1 className="text-2xl font-bold text-[#153F35]">
+          <h1 className="text-2xl font-bold text-heading">
             Unable to Load Event
           </h1>
 
-          <p className="mt-3 text-sm text-gray-500">
+          <p className="mt-3 text-sm text-muted-foreground">
             Something went wrong while loading this event.
             Please try again later.
           </p>
 
           <Link
             href="/events"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white hover:bg-[#153F35]"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Events
@@ -102,13 +102,13 @@ async function EventDetailsContent({
     .join(" ");
 
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Back Navigation */}
         <Link
           href="/events"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Upcoming Events
@@ -120,7 +120,7 @@ async function EventDetailsContent({
           <div className="lg:col-span-2">
 
             {/* Event Image */}
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl bg-card shadow-sm">
               <img
                 src={event.thumbnailUrl}
                 alt={event.title}
@@ -129,13 +129,13 @@ async function EventDetailsContent({
             </div>
 
             {/* Event Details */}
-            <div className="mt-6 rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+            <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 
-              <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+              <span className="inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
                 {eventType}
               </span>
 
-              <h1 className="mt-5 text-2xl font-bold leading-tight text-[#153F35] sm:text-3xl lg:text-4xl">
+              <h1 className="mt-5 text-2xl font-bold leading-tight text-heading sm:text-3xl lg:text-4xl">
                 {event.title}
               </h1>
 
@@ -143,48 +143,48 @@ async function EventDetailsContent({
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
 
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#226B52]/10 text-[#226B52]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-brand-text">
                     <CalendarDays className="h-5 w-5" />
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Event Date
                     </p>
 
-                    <p className="text-sm font-semibold text-[#1E2E27]">
+                    <p className="text-sm font-semibold text-foreground">
                       {formatEventDate(event.eventDate)}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#226B52]/10 text-[#226B52]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-brand-text">
                     <Clock3 className="h-5 w-5" />
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Event Time
                     </p>
 
-                    <p className="text-sm font-semibold text-[#1E2E27]">
+                    <p className="text-sm font-semibold text-foreground">
                       {formatEventTime(event.eventDate)}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 sm:col-span-2">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#226B52]/10 text-[#226B52]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-brand-text">
                     <MapPin className="h-5 w-5" />
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Event Location
                     </p>
 
-                    <p className="text-sm font-semibold text-[#1E2E27]">
+                    <p className="text-sm font-semibold text-foreground">
                       {location || "Location not specified"}
                     </p>
                   </div>
@@ -193,11 +193,11 @@ async function EventDetailsContent({
 
               {/* Description */}
               <div className="mt-8 border-t border-border pt-7">
-                <h2 className="text-xl font-bold text-[#153F35]">
+                <h2 className="text-xl font-bold text-heading">
                   About This Event
                 </h2>
 
-                <p className="mt-4 whitespace-pre-line text-sm leading-8 text-gray-600">
+                <p className="mt-4 whitespace-pre-line text-sm leading-8 text-muted-foreground">
                   {event.description}
                 </p>
               </div>
@@ -206,17 +206,17 @@ async function EventDetailsContent({
 
           {/* Join Event Sidebar */}
           <aside>
-            <div className="sticky top-24 rounded-2xl border border-border bg-white p-6 shadow-sm">
+            <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 shadow-sm">
 
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3B85D]/20 text-[#153F35]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/20 text-heading">
                 <HandHeart className="h-6 w-6" />
               </div>
 
-              <h2 className="mt-5 text-xl font-bold text-[#153F35]">
+              <h2 className="mt-5 text-xl font-bold text-heading">
                 Be Part of This Event
               </h2>
 
-              <p className="mt-3 text-sm leading-7 text-gray-500">
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
                 Join hands with your community and help create
                 a positive impact through this event.
               </p>

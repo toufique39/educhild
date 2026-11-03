@@ -24,9 +24,9 @@ export default function HeroSection() {
 
           {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-secondary px-4 py-2">
-            <Sparkles size={15} className="text-primary" />
+            <Sparkles size={15} className="text-brand-text" />
 
-            <span className="text-xs font-bold tracking-widest text-primary uppercase">
+            <span className="text-xs font-bold tracking-widest text-brand-text uppercase">
               Learn · Grow · Inspire
             </span>
           </div>
@@ -34,7 +34,7 @@ export default function HeroSection() {
           {/* Main Heading */}
           <h1 className="mt-7 max-w-xl text-4xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Every Child Deserves a{" "}
-            <span className="relative text-primary">
+            <span className="relative text-brand-text">
               Chance
             </span>{" "}
             to Learn.
@@ -52,7 +52,7 @@ export default function HeroSection() {
 
             <Link
               href="/events"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#153F35] hover:shadow-lg"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg"
             >
               Explore Events
 
@@ -61,7 +61,7 @@ export default function HeroSection() {
 
             <Link
               href="/register"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-7 py-4 text-sm font-semibold text-foreground transition hover:border-primary hover:bg-secondary hover:text-primary"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-7 py-4 text-sm font-semibold text-foreground transition hover:border-primary hover:bg-secondary hover:text-brand-text"
             >
               Become a Volunteer
 
@@ -74,7 +74,7 @@ export default function HeroSection() {
           <div className="mt-10 flex items-center gap-3 border-t border-border pt-7">
 
             <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10">
-              <Heart size={20} className="text-primary" />
+              <Heart size={20} className="text-brand-text" />
             </div>
 
             <div>
@@ -130,7 +130,7 @@ export default function HeroSection() {
               <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                 <BookOpenCheck
                   size={23}
-                  className="text-primary"
+                  className="text-brand-text"
                 />
               </div>
 

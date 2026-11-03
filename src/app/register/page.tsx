@@ -107,39 +107,39 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F8FAF7] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 
           {/* Header */}
           <div className="mb-7 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#226B52] text-white">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
               <HeartHandshake className="h-8 w-8" />
             </div>
 
-            <h1 className="mt-5 text-2xl font-bold text-[#153F35]">
+            <h1 className="mt-5 text-2xl font-bold text-heading">
               Create Your Account
             </h1>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Join our community and start making a difference.
             </p>
           </div>
 
           {/* Registration Success */}
           {isSuccess ? (
-            <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center">
-              <h2 className="text-lg font-bold text-green-800">
+            <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center dark:border-green-900/50 dark:bg-green-950/30">
+              <h2 className="text-lg font-bold text-green-800 dark:text-green-300">
                 Registration Successful!
               </h2>
 
-              <p className="mt-2 text-sm text-green-700">
+              <p className="mt-2 text-sm text-green-700 dark:text-green-400">
                 Your account has been created successfully. Welcome to EduChild!
               </p>
 
               <Link
                 href="/"
-                className="mt-5 inline-block rounded-lg bg-[#226B52] px-6 py-3 text-sm font-semibold text-white hover:bg-[#153F35]"
+                className="mt-5 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
               >
                 Continue to Homepage
               </Link>
@@ -151,7 +151,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleGoogleSignup}
                 disabled={isGoogleSubmitting || isSubmitting}
-                className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-3 rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span className="text-lg font-bold">G</span>
 
@@ -162,13 +162,13 @@ export default function RegisterPage() {
 
               {/* Divider */}
               <div className="my-6 flex items-center gap-4">
-                <div className="h-px flex-1 bg-gray-200" />
+                <div className="h-px flex-1 bg-border" />
 
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted-foreground">
                   OR REGISTER WITH EMAIL
                 </span>
 
-                <div className="h-px flex-1 bg-gray-200" />
+                <div className="h-px flex-1 bg-border" />
               </div>
 
               {/* Email Registration Form */}
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                 <div>
                   <label
                     htmlFor="name"
-                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                    className="mb-2 block text-sm font-semibold text-foreground"
                   >
                     Full Name
                   </label>
@@ -191,7 +191,7 @@ export default function RegisterPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                   />
                 </div>
 
@@ -199,7 +199,7 @@ export default function RegisterPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                    className="mb-2 block text-sm font-semibold text-foreground"
                   >
                     Email Address
                   </label>
@@ -212,14 +212,14 @@ export default function RegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                   />
                 </div>
                 {/* Password */}
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                    className="mb-2 block text-sm font-semibold text-foreground"
                   >
                     Password
                   </label>
@@ -234,7 +234,7 @@ export default function RegisterPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       minLength={6}
                       required
-                      className="w-full rounded-lg border border-gray-200 px-4 py-3 pr-12 text-sm outline-none focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                      className="w-full rounded-lg border border-border bg-field px-4 py-3 pr-12 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground"
                     />
 
                     <button
@@ -243,7 +243,7 @@ export default function RegisterPage() {
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#226B52]"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-brand-text"
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -253,7 +253,7 @@ export default function RegisterPage() {
                     </button>
                   </div>
 
-                  <p className="mt-2 text-xs leading-5 text-gray-500">
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
                     Minimum 6 characters, including uppercase and lowercase letters.
                   </p>
                 </div>
@@ -262,7 +262,7 @@ export default function RegisterPage() {
                 {errorMessage && (
                   <div
                     role="alert"
-                    className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                    className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
                   >
                     {errorMessage}
                   </div>
@@ -272,7 +272,7 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || isGoogleSubmitting}
-                  className="w-full rounded-lg bg-[#226B52] px-4 py-3 font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting
                     ? "Creating Account..."
@@ -284,11 +284,11 @@ export default function RegisterPage() {
 
           {/* Login Link */}
           {!isSuccess && (
-            <p className="mt-7 text-center text-sm text-gray-500">
+            <p className="mt-7 text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-[#226B52] hover:text-[#153F35]"
+                className="font-semibold text-brand-text hover:text-brand-text-hover"
               >
                 Log In
               </Link>
@@ -296,7 +296,7 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
+        <p className="mt-6 text-center text-xs text-muted-foreground">
           Together, we can create a better future for every child.
         </p>
       </div>

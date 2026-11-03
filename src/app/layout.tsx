@@ -6,6 +6,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Suspense } from "react";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 
 
@@ -30,10 +31,18 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
+         <ThemeProvider
+         
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+      disableTransitionOnChange
+      storageKey="educhild-theme"
+    >
         <Suspense
   fallback={
     <div
-      className="h-18 border-b border-gray-100 bg-white"
+      className="h-18 border-b border-border bg-background"
       aria-hidden="true"
     />
   }
@@ -43,6 +52,7 @@ export default function RootLayout({
         {children}
           <Footer></Footer>
         <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -15,8 +15,8 @@ const features = [
     title: "Create Learning Events",
     description:
       "Organize meaningful educational events, workshops, and learning activities to create better opportunities for children.",
-    iconBg: "bg-[#EAF2EC]",
-    iconColor: "text-[#226B52]",
+    iconBg: "bg-tint-green",
+    iconColor: "text-brand-text",
     link: "/create-event",
   },
   {
@@ -25,8 +25,8 @@ const features = [
     title: "Volunteer Together",
     description:
       "Connect with passionate volunteers and become part of a community that believes every child deserves education.",
-    iconBg: "bg-[#FFF2D9]",
-    iconColor: "text-[#A46B13]",
+    iconBg: "bg-tint-amber",
+    iconColor: "text-amber-gold",
     link: "/events",
   },
   {
@@ -35,8 +35,8 @@ const features = [
     title: "Track Community Impact",
     description:
       "Celebrate your contributions, follow educational initiatives, and see how collective efforts create meaningful changes.",
-    iconBg: "bg-[#EAF2EC]",
-    iconColor: "text-[#226B52]",
+    iconBg: "bg-tint-green",
+    iconColor: "text-brand-text",
     link: "/events",
   },
 ];
@@ -52,13 +52,13 @@ export default function FeaturesSection() {
         {/* Section Heading */}
         <div className="mx-auto max-w-2xl text-center">
 
-          <span className="inline-flex items-center rounded-full bg-secondary px-4 py-2 text-xs font-bold tracking-widest text-primary uppercase">
+          <span className="inline-flex items-center rounded-full bg-secondary px-4 py-2 text-xs font-bold tracking-widest text-brand-text uppercase">
             Why EduChild?
           </span>
 
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Small Actions,{" "}
-            <span className="text-primary">
+            <span className="text-brand-text">
               Big Differences.
             </span>
           </h2>
@@ -104,7 +104,7 @@ export default function FeaturesSection() {
                 {/* Card Content */}
                 <div className="mt-8 flex flex-1 flex-col">
 
-                  <h3 className="text-xl font-bold text-card-foreground transition-colors group-hover:text-primary">
+                  <h3 className="text-xl font-bold text-card-foreground transition-colors group-hover:text-brand-text">
                     {feature.title}
                   </h3>
 
@@ -115,7 +115,7 @@ export default function FeaturesSection() {
                   {/* Learn More Link */}
                   <Link
                     href={feature.link}
-                    className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-all hover:gap-3"
+                    className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-brand-text transition-all hover:gap-3"
                   >
                     Learn More
                     <ArrowUpRight size={17} />

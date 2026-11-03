@@ -16,8 +16,8 @@ const steps = [
     description:
       "Explore upcoming educational events and discover meaningful volunteer opportunities in your community.",
     icon: Search,
-    color: "bg-[#EAF2EC]",
-    iconColor: "text-[#226B52]",
+    color: "bg-tint-green",
+    iconColor: "text-brand-text",
   },
   {
     number: "02",
@@ -25,8 +25,8 @@ const steps = [
     description:
       "Choose an event that inspires you and join other passionate people who believe in the power of education.",
     icon: HandHeart,
-    color: "bg-[#FFF2D9]",
-    iconColor: "text-[#A46B13]",
+    color: "bg-tint-amber",
+    iconColor: "text-amber-gold",
   },
   {
     number: "03",
@@ -34,8 +34,8 @@ const steps = [
     description:
       "Share your time, skills, and kindness to create better learning opportunities for children.",
     icon: Sprout,
-    color: "bg-[#EAF2EC]",
-    iconColor: "text-[#226B52]",
+    color: "bg-tint-green",
+    iconColor: "text-brand-text",
   },
 ];
 
@@ -43,20 +43,20 @@ export default function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="bg-white/40 px-4 py-20 sm:px-6 lg:px-8"
+      className="bg-muted/40 px-4 py-20 sm:px-6 lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
 
         {/* Section Heading */}
         <div className="mx-auto max-w-2xl text-center">
 
-          <span className="inline-flex rounded-full bg-primary/10 px-4 py-2 text-xs font-bold tracking-widest text-primary uppercase">
+          <span className="inline-flex rounded-full bg-primary/10 px-4 py-2 text-xs font-bold tracking-widest text-brand-text uppercase">
             Simple Process
           </span>
 
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             How{" "}
-            <span className="text-primary">
+            <span className="text-brand-text">
               EduChild
             </span>{" "}
             Works
@@ -99,7 +99,7 @@ export default function HowItWorksSection() {
                 </div>
 
                 {/* Step Number */}
-                <span className="mt-5 text-xs font-bold tracking-[0.2em] text-primary">
+                <span className="mt-5 text-xs font-bold tracking-[0.2em] text-brand-text">
                   STEP {step.number}
                 </span>
 

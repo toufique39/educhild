@@ -11,21 +11,21 @@ export default async function UpcomingEventsSection() {
   const events = await fetchUpcomingEvents(6);
 
   return (
-    <section className="bg-[#F8FAF7] px-4 py-20 sm:px-6 lg:px-8">
+    <section className="bg-background px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Section Heading */}
         <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+            <span className="inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
               Make an Impact
             </span>
 
-            <h2 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+            <h2 className="mt-4 text-3xl font-bold text-heading sm:text-4xl">
               Upcoming Community Events
             </h2>
 
-            <p className="mt-3 max-w-xl text-sm leading-7 text-gray-500">
+            <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
               Discover meaningful events and join hands with
               your community to create positive change.
             </p>
@@ -33,7 +33,7 @@ export default async function UpcomingEventsSection() {
 
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover"
           >
             View All Events
             <ArrowRight className="h-4 w-4" />
@@ -42,14 +42,14 @@ export default async function UpcomingEventsSection() {
 
         {/* Event Listing */}
         {events.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
-            <CalendarDays className="mx-auto mb-4 h-12 w-12 text-[#226B52]" />
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+            <CalendarDays className="mx-auto mb-4 h-12 w-12 text-brand-text" />
 
-            <h3 className="text-xl font-semibold text-[#153F35]">
+            <h3 className="text-xl font-semibold text-heading">
               No Upcoming Events
             </h3>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Check back later for new community events.
             </p>
           </div>

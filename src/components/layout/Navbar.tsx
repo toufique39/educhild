@@ -18,6 +18,7 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
+import ThemeToggle from "@/components/layout/theme-toggle";
 
 export default function Navbar() {
   const router = useRouter();
@@ -91,12 +92,12 @@ export default function Navbar() {
   const getLinkClass = (href: string) =>
     `text-sm font-medium transition-colors ${
       isActive(href)
-        ? "text-[#226B52]"
-        : "text-[#1E2E27] hover:text-[#226B52]"
+        ? "text-brand-text"
+        : "text-foreground hover:text-brand-text"
     }`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-sm backdrop-blur">
       <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
@@ -105,11 +106,11 @@ export default function Navbar() {
           onClick={() => setIsMobileMenuOpen(false)}
           className="flex shrink-0 items-center gap-2"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#226B52] text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <HeartHandshake className="h-6 w-6" />
           </div>
 
-          <span className="text-xl font-bold tracking-tight text-[#153F35]">
+          <span className="text-xl font-bold tracking-tight text-heading">
             EduChild
           </span>
         </Link>
@@ -129,8 +130,9 @@ export default function Navbar() {
 
         {/* Desktop Authentication */}
         <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
           {isPending ? (
-            <div className="h-10 w-28 animate-pulse rounded-lg bg-gray-100" />
+            <div className="h-10 w-28 animate-pulse rounded-lg bg-muted" />
           ) : user ? (
             /* Logged-in User Profile */
             <div className="relative">
@@ -142,7 +144,7 @@ export default function Navbar() {
                 }}
                 title={user.name}
                 aria-expanded={isProfileOpen}
-                className="flex items-center gap-2 rounded-full border border-gray-200 py-1.5 pl-2 pr-3 transition hover:bg-gray-50"
+                className="flex items-center gap-2 rounded-full border border-border py-1.5 pl-2 pr-3 transition hover:bg-muted"
               >
                 {user.image ? (
                   <Image
@@ -153,17 +155,17 @@ export default function Navbar() {
                     width={30}
                   />
                 ) : (
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                     {getInitials(user.name || "User")}
                   </div>
                 )}
 
-                <span className="max-w-28 truncate text-sm font-semibold text-[#153F35]">
+                <span className="max-w-28 truncate text-sm font-semibold text-heading">
                   {user.name || "Volunteer"}
                 </span>
 
                 <ChevronDown
-                  className={`h-4 w-4 text-gray-500 transition-transform ${
+                  className={`h-4 w-4 text-muted-foreground transition-transform ${
                     isProfileOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -171,14 +173,14 @@ export default function Navbar() {
 
               {/* Profile Dropdown */}
               {isProfileOpen && (
-                <div className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+                <div className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-xl border border-border bg-popover shadow-xl">
 
-                  <div className="border-b border-gray-100 px-4 py-4">
-                    <p className="truncate text-sm font-semibold text-[#153F35]">
+                  <div className="border-b border-border px-4 py-4">
+                    <p className="truncate text-sm font-semibold text-heading">
                       {user.name}
                     </p>
 
-                    <p className="mt-1 truncate text-xs text-gray-500">
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
                       {user.email}
                     </p>
                   </div>
@@ -186,7 +188,7 @@ export default function Navbar() {
                   <Link
   href="/profile"
   onClick={() => setIsProfileOpen(false)}
-  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-primary/10 hover:text-brand-text"
 >
   <UserRound className="h-4 w-4" />
   My Profile
@@ -196,7 +198,7 @@ export default function Navbar() {
                     <Link
                       href="/create-event"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-primary/10 hover:text-brand-text"
                     >
                       <PlusCircle className="h-4 w-4" />
                       Create Event
@@ -205,7 +207,7 @@ export default function Navbar() {
                     <Link
                       href="/manage-events"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-primary/10 hover:text-brand-text"
                     >
                       <ClipboardList className="h-4 w-4" />
                       Manage Events
@@ -214,7 +216,7 @@ export default function Navbar() {
                     <Link
                       href="/joined-events"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-primary/10 hover:text-brand-text"
                     >
                       <CalendarCheck className="h-4 w-4" />
                       Joined Events
@@ -222,17 +224,17 @@ export default function Navbar() {
                   </div>
 
                   {logoutError && (
-                    <p className="px-4 pb-2 text-xs text-red-600">
+                    <p className="px-4 pb-2 text-xs text-red-600 dark:text-red-400">
                       {logoutError}
                     </p>
                   )}
 
-                  <div className="border-t border-gray-100 p-2">
+                  <div className="border-t border-border p-2">
                     <button
                       type="button"
                       onClick={handleLogout}
                       disabled={isLoggingOut}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-950/40"
                     >
                       <LogOut className="h-4 w-4" />
 
@@ -247,14 +249,14 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="rounded-lg px-4 py-2 text-sm font-semibold text-[#226B52] transition hover:bg-[#226B52]/10"
+                className="rounded-lg px-4 py-2 text-sm font-semibold text-brand-text transition hover:bg-primary/10"
               >
                 Login
               </Link>
 
               <Link
                 href="/register"
-                className="rounded-lg bg-[#226B52] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#153F35]"
+                className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
               >
                 Join as Volunteer
               </Link>
@@ -268,7 +270,7 @@ export default function Navbar() {
           aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMobileMenuOpen}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="rounded-lg p-2 text-[#153F35] transition hover:bg-gray-100 md:hidden"
+          className="rounded-lg p-2 text-heading transition hover:bg-muted md:hidden"
         >
           {isMobileMenuOpen ? (
             <X className="h-6 w-6" />
@@ -280,7 +282,10 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="border-t border-gray-100 bg-white px-4 py-5 shadow-lg md:hidden">
+        <div className="border-t border-border bg-card px-4 py-5 shadow-lg md:hidden">
+          <div className="flex justify-end px-4 pb-3">
+  <ThemeToggle />
+</div>
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
@@ -294,9 +299,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-4 border-t border-gray-100 pt-4">
+          <div className="mt-4 border-t border-border pt-4">
             {isPending ? (
-              <div className="h-10 animate-pulse rounded-lg bg-gray-100" />
+              <div className="h-10 animate-pulse rounded-lg bg-muted" />
             ) : user ? (
               <div>
                 {/* Mobile User Information */}
@@ -310,17 +315,17 @@ export default function Navbar() {
                       height={44}
                     />
                   ) : (
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#226B52] text-sm font-semibold text-white">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                       {getInitials(user.name || "User")}
                     </div>
                   )}
 
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[#153F35]">
+                    <p className="truncate text-sm font-semibold text-heading">
                       {user.name}
                     </p>
 
-                    <p className="truncate text-xs text-gray-500">
+                    <p className="truncate text-xs text-muted-foreground">
                       {user.email}
                     </p>
                   </div>
@@ -328,7 +333,7 @@ export default function Navbar() {
                 <Link
   href="/profile"
   onClick={() => setIsProfileOpen(false)}
-  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-[#226B52]/10 hover:text-[#226B52]"
+  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-primary/10 hover:text-brand-text"
 >
   <UserRound className="h-4 w-4" />
   My Profile
@@ -337,7 +342,7 @@ export default function Navbar() {
                 <Link
                   href="/create-event"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-foreground hover:bg-muted"
                 >
                   <PlusCircle className="h-4 w-4" />
                   Create Event
@@ -346,7 +351,7 @@ export default function Navbar() {
                 <Link
                   href="/manage-events"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-foreground hover:bg-muted"
                 >
                   <ClipboardList className="h-4 w-4" />
                   Manage Events
@@ -355,14 +360,14 @@ export default function Navbar() {
                 <Link
                   href="/joined-events"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-foreground hover:bg-muted"
                 >
                   <CalendarCheck className="h-4 w-4" />
                   Joined Events
                 </Link>
 
                 {logoutError && (
-                  <p className="px-4 py-2 text-xs text-red-600">
+                  <p className="px-4 py-2 text-xs text-red-600 dark:text-red-400">
                     {logoutError}
                   </p>
                 )}
@@ -371,7 +376,7 @@ export default function Navbar() {
                   type="button"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60"
+                  className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-950/40"
                 >
                   <LogOut className="h-4 w-4" />
                   {isLoggingOut ? "Logging out..." : "Logout"}
@@ -382,7 +387,7 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border border-[#226B52] px-4 py-3 text-center text-sm font-semibold text-[#226B52]"
+                  className="rounded-lg border border-primary px-4 py-3 text-center text-sm font-semibold text-brand-text"
                 >
                   Login
                 </Link>
@@ -390,7 +395,7 @@ export default function Navbar() {
                 <Link
                   href="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg bg-[#226B52] px-4 py-3 text-center text-sm font-semibold text-white"
+                  className="rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
                 >
                   Join as Volunteer
                 </Link>

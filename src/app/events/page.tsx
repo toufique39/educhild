@@ -31,7 +31,7 @@ async function UpcomingEventsList() {
 
 export default function UpcomingEventsPage() {
   return (
-    <main className="min-h-screen bg-[#F8FAF7]">
+    <main className="min-h-screen bg-background">
       {/* Page Header */}
       <section className="bg-[#153F35] px-4 py-16 text-center sm:px-6 lg:py-20">
         <div className="mx-auto max-w-3xl">
@@ -54,11 +54,11 @@ export default function UpcomingEventsPage() {
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-[#153F35]">
+            <h2 className="text-2xl font-bold text-heading">
               Explore Events
             </h2>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Find an opportunity and make a difference.
             </p>
           </div>

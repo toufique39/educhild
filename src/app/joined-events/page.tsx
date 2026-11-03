@@ -124,12 +124,12 @@ setEvents(result.data ?? []);
   // Loading state
   if (isPending || isLoading) {
     return (
-      <main className="min-h-screen bg-[#F8FAF7] px-4 py-16 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-background px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center gap-3">
-            <Loader2 className="h-6 w-6 animate-spin text-[#226B52]" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand-text" />
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               Loading your joined events...
             </p>
           </div>
@@ -143,8 +143,8 @@ setEvents(result.data ?? []);
   // Guest user redirecting
   if (!session) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <p className="text-sm text-gray-500">
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
           Redirecting to login...
         </p>
       </main>
@@ -152,13 +152,13 @@ setEvents(result.data ?? []);
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Back Navigation */}
         <Link
           href="/"
-          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] transition hover:text-[#153F35]"
+          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-text transition hover:text-brand-text-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -166,28 +166,28 @@ setEvents(result.data ?? []);
 
         {/* Page Header */}
         <div className="mb-10">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
             <CalendarCheck className="h-4 w-4" />
             Your Participation
           </span>
 
-          <h1 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-bold text-heading sm:text-4xl">
             My Joined Events
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
             Keep track of the community events you have joined.
             Your participation helps create a better future.
           </p>
         </div>
 
         {/* Event Count */}
-        <div className="mb-8 rounded-xl border border-border bg-white p-5">
-          <p className="text-sm text-gray-500">
+        <div className="mb-8 rounded-xl border border-border bg-card p-5">
+          <p className="text-sm text-muted-foreground">
             Total Events Joined
           </p>
 
-          <p className="mt-1 text-3xl font-bold text-[#226B52]">
+          <p className="mt-1 text-3xl font-bold text-brand-text">
             {events.length}
           </p>
         </div>
@@ -196,16 +196,16 @@ setEvents(result.data ?? []);
         {errorMessage && (
           <div
             role="alert"
-            className="mb-7 flex flex-col justify-between gap-4 rounded-xl border border-red-200 bg-red-50 p-5 sm:flex-row sm:items-center"
+            className="mb-7 flex flex-col justify-between gap-4 rounded-xl border border-red-200 bg-red-50 p-5 sm:flex-row sm:items-center dark:border-red-900/50 dark:bg-red-950/30"
           >
-            <p className="text-sm text-red-700">
+            <p className="text-sm text-red-700 dark:text-red-300">
               {errorMessage}
             </p>
 
             <button
               type="button"
               onClick={loadJoinedEvents}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-card px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 dark:border-red-900/50 dark:text-red-300 dark:hover:bg-red-950/50"
             >
               <RefreshCw className="h-4 w-4" />
               Try Again
@@ -215,16 +215,16 @@ setEvents(result.data ?? []);
 
         {/* Empty State */}
         {!errorMessage && events.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#226B52]/10 text-[#226B52]">
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-brand-text">
               <CalendarCheck className="h-8 w-8" />
             </div>
 
-            <h2 className="mt-5 text-xl font-bold text-[#153F35]">
+            <h2 className="mt-5 text-xl font-bold text-heading">
               No Joined Events Yet
             </h2>
 
-            <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-gray-500">
+            <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-muted-foreground">
               You havenot joined any community events yet.
               Explore upcoming events and become part of
               something meaningful.
@@ -232,7 +232,7 @@ setEvents(result.data ?? []);
 
             <Link
               href="/events"
-              className="mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#153F35]"
+              className="mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
             >
               <PlusCircle className="h-4 w-4" />
               Explore Events
@@ -245,18 +245,18 @@ setEvents(result.data ?? []);
           <>
             <div className="mb-7 flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold text-[#153F35]">
+                <h2 className="text-xl font-bold text-heading">
                   Events You are Participating In
                 </h2>
 
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-muted-foreground">
                   Your joined community activities.
                 </p>
               </div>
 
               <Link
                 href="/events"
-                className="hidden items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35] sm:inline-flex"
+                className="hidden items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover sm:inline-flex"
               >
                 Explore More
                 <PlusCircle className="h-4 w-4" />
@@ -266,7 +266,7 @@ setEvents(result.data ?? []);
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {events.map((event) => (
                 <div key={event._id} className="flex flex-col">
-                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-[#226B52]">
+                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-brand-text">
                     <CalendarCheck className="h-4 w-4" />
                     Successfully Joined
                   </div>
@@ -280,7 +280,7 @@ setEvents(result.data ?? []);
             <div className="mt-9 text-center sm:hidden">
               <Link
                 href="/events"
-                className="inline-flex items-center gap-2 rounded-lg bg-[#226B52] px-5 py-3 text-sm font-semibold text-white hover:bg-[#153F35]"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
               >
                 <PlusCircle className="h-4 w-4" />
                 Explore More Events

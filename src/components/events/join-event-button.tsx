@@ -104,7 +104,7 @@ export default function JoinEventButton({
         type="button"
         onClick={handleJoinEvent}
         disabled={isPending || isJoining || isJoined}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending || isJoining ? (
           <>
@@ -129,15 +129,15 @@ export default function JoinEventButton({
           role={isError ? "alert" : "status"}
           className={`mt-4 rounded-lg border px-3 py-3 text-center text-sm ${
             isError
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-green-200 bg-green-50 text-green-700"
+              ? "border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
+              : "border-green-200 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
           }`}
         >
           {message}
         </div>
       )}
 
-      <p className="mt-4 text-center text-xs leading-5 text-gray-400">
+      <p className="mt-4 text-center text-xs leading-5 text-muted-foreground">
         Join your community and help create a positive impact.
       </p>
     </div>

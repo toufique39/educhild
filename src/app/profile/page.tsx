@@ -117,8 +117,8 @@ export default function ProfilePage() {
   // Loading state
   if (isPending) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <Loader2 className="h-9 w-9 animate-spin text-[#226B52]" />
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <Loader2 className="h-9 w-9 animate-spin text-brand-text" />
       </main>
     );
   }
@@ -126,8 +126,8 @@ export default function ProfilePage() {
   // Redirecting guest users
   if (!session) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <p className="text-sm text-gray-500">
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
           Redirecting to login...
         </p>
       </main>
@@ -135,13 +135,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
 
         {/* Back Navigation */}
         <Link
           href="/"
-          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -149,43 +149,43 @@ export default function ProfilePage() {
 
         {/* Page Heading */}
         <div className="mb-8">
-          <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+          <span className="inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
             Account Settings
           </span>
 
-          <h1 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-bold text-heading sm:text-4xl">
             My Profile
           </h1>
 
-          <p className="mt-3 text-sm leading-7 text-gray-500">
+          <p className="mt-3 text-sm leading-7 text-muted-foreground">
             Manage your personal information and profile picture.
           </p>
         </div>
 
         {/* Profile Card */}
-        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 
           {/* Profile Preview */}
-          <div className="mb-8 flex flex-col items-center border-b border-gray-100 pb-8">
+          <div className="mb-8 flex flex-col items-center border-b border-border pb-8">
             {(imageEdited ? image : session.user.image || "") ? (
               <Image
                 src={imageEdited ? image : session.user.image || ""}
                 alt={(nameEdited ? name : session.user.name || "") || "User profile"}
-                className="h-28 w-28 rounded-full border-4 border-[#226B52]/10 object-cover"
+                className="h-28 w-28 rounded-full border-4 border-primary/10 object-cover"
                 width={112}
                 height={112}
               />
             ) : (
-              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-[#226B52]/10 text-[#226B52]">
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-brand-text">
                 <UserRound className="h-14 w-14" />
               </div>
             )}
 
-            <h2 className="mt-4 text-lg font-bold text-[#153F35]">
+            <h2 className="mt-4 text-lg font-bold text-heading">
               {nameEdited ? name : session.user.name}
             </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               {session.user.email}
             </p>
           </div>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
             <div>
               <label
                 htmlFor="name"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Full Name
               </label>
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                 placeholder="Enter your full name"
                 required
                 maxLength={100}
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -224,7 +224,7 @@ export default function ProfilePage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Email Address
               </label>
@@ -234,10 +234,10 @@ export default function ProfilePage() {
                 type="email"
                 value={session.user.email}
                 readOnly
-                className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-500 outline-none"
+                className="w-full cursor-not-allowed rounded-lg border border-border bg-muted px-4 py-3 text-sm text-muted-foreground outline-none"
               />
 
-              <p className="mt-2 text-xs text-gray-400">
+              <p className="mt-2 text-xs text-muted-foreground">
                 Email address cannot be changed from this page.
               </p>
             </div>
@@ -246,9 +246,9 @@ export default function ProfilePage() {
             <div>
               <label
                 htmlFor="image"
-                className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground"
               >
-                <Camera className="h-4 w-4 text-[#226B52]" />
+                <Camera className="h-4 w-4 text-brand-text" />
                 Profile Photo URL
               </label>
 
@@ -261,10 +261,10 @@ export default function ProfilePage() {
                   setImageEdited(true);
                 }}
                 placeholder="https://example.com/profile.jpg"
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
 
-              <p className="mt-2 text-xs text-gray-400">
+              <p className="mt-2 text-xs text-muted-foreground">
                 Provide a publicly accessible image URL.
                 Leave blank to keep your existing photo.
               </p>
@@ -274,7 +274,7 @@ export default function ProfilePage() {
             {errorMessage && (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
               >
                 {errorMessage}
               </div>
@@ -284,7 +284,7 @@ export default function ProfilePage() {
             {successMessage && (
               <div
                 role="status"
-                className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+                className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
               >
                 {successMessage}
               </div>
@@ -294,7 +294,7 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={isUpdating}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isUpdating ? (
                 <>

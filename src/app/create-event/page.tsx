@@ -174,16 +174,16 @@ export default function CreateEventPage() {
   // Loading state
   if (isPending) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#226B52] border-t-transparent" />
+      <div className="flex min-h-[60vh] items-center justify-center bg-background">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#F8FAF7]">
-        <p className="text-sm text-gray-500">
+      <div className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
           Redirecting to login...
         </p>
       </div>
@@ -191,13 +191,13 @@ export default function CreateEventPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAF7] px-4 py-12 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
 
         {/* Back Navigation */}
         <Link
           href="/events"
-          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#226B52] hover:text-[#153F35]"
+          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-text hover:text-brand-text-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Events
@@ -205,22 +205,22 @@ export default function CreateEventPage() {
 
         {/* Page Heading */}
         <div className="mb-8">
-          <span className="inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+          <span className="inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
             Share an Opportunity
           </span>
 
-          <h1 className="mt-4 text-3xl font-bold text-[#153F35] sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-bold text-heading sm:text-4xl">
             Create a Community Event
           </h1>
 
-          <p className="mt-3 text-sm leading-7 text-gray-500">
+          <p className="mt-3 text-sm leading-7 text-muted-foreground">
             Bring people together, create meaningful experiences,
             and make a positive difference in your community.
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 
           <form onSubmit={handleSubmit} className="space-y-6">
 
@@ -228,7 +228,7 @@ export default function CreateEventPage() {
             <div>
               <label
                 htmlFor="title"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Event Title <span className="text-red-500">*</span>
               </label>
@@ -241,7 +241,7 @@ export default function CreateEventPage() {
                 onChange={(e) => handleChange("title", e.target.value)}
                 required
                 maxLength={100}
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -249,7 +249,7 @@ export default function CreateEventPage() {
             <div>
               <label
                 htmlFor="description"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Event Description <span className="text-red-500">*</span>
               </label>
@@ -264,7 +264,7 @@ export default function CreateEventPage() {
                 }
                 required
                 maxLength={2000}
-                className="w-full resize-y rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full resize-y rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -272,7 +272,7 @@ export default function CreateEventPage() {
             <div>
               <label
                 htmlFor="eventType"
-                className="mb-2 block text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 block text-sm font-semibold text-foreground"
               >
                 Event Type <span className="text-red-500">*</span>
               </label>
@@ -284,7 +284,9 @@ export default function CreateEventPage() {
                   handleChange("eventType", e.target.value)
                 }
                 required
-                className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className={`w-full rounded-lg border border-border bg-field px-4 py-3 text-sm outline-none transition ${
+                  formData.eventType === "" ? "text-muted-foreground" : ""
+                } focus:border-primary focus:ring-2 focus:ring-primary/20`}
               >
                 <option value="">Select an event type</option>
                 <option value="cleanup">Community Cleanup</option>
@@ -301,9 +303,9 @@ export default function CreateEventPage() {
             <div>
               <label
                 htmlFor="thumbnailUrl"
-                className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground"
               >
-                <ImagePlus className="h-4 w-4 text-[#226B52]" />
+                <ImagePlus className="h-4 w-4 text-brand-text" />
                 Event Thumbnail URL
                 <span className="text-red-500">*</span>
               </label>
@@ -317,14 +319,14 @@ export default function CreateEventPage() {
                   handleChange("thumbnailUrl", e.target.value)
                 }
                 required
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
             {/* Location */}
             <div>
-              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#1E2E27]">
-                <MapPin className="h-4 w-4 text-[#226B52]" />
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                <MapPin className="h-4 w-4 text-brand-text" />
                 Event Location
               </h2>
 
@@ -332,7 +334,7 @@ export default function CreateEventPage() {
                 <div>
                   <label
                     htmlFor="area"
-                    className="mb-2 block text-sm font-medium text-gray-600"
+                    className="mb-2 block text-sm font-medium text-muted-foreground"
                   >
                     Area <span className="text-red-500">*</span>
                   </label>
@@ -344,14 +346,14 @@ export default function CreateEventPage() {
                     value={formData.area}
                     onChange={(e) => handleChange("area", e.target.value)}
                     required
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="city"
-                    className="mb-2 block text-sm font-medium text-gray-600"
+                    className="mb-2 block text-sm font-medium text-muted-foreground"
                   >
                     City <span className="text-red-500">*</span>
                   </label>
@@ -363,7 +365,7 @@ export default function CreateEventPage() {
                     value={formData.city}
                     onChange={(e) => handleChange("city", e.target.value)}
                     required
-                    className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                    className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
               </div>
@@ -373,9 +375,9 @@ export default function CreateEventPage() {
             <div>
               <label
                 htmlFor="eventDate"
-                className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#1E2E27]"
+                className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground"
               >
-                <CalendarDays className="h-4 w-4 text-[#226B52]" />
+                <CalendarDays className="h-4 w-4 text-brand-text" />
                 Event Date & Time
                 <span className="text-red-500">*</span>
               </label>
@@ -389,23 +391,23 @@ export default function CreateEventPage() {
                   handleChange("eventDate", e.target.value)
                 }
                 required
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#226B52] focus:ring-2 focus:ring-[#226B52]/10"
+                className="w-full rounded-lg border border-border bg-field px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
 
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-muted-foreground">
                 Only future dates and times are allowed.
               </p>
             </div>
 
             {/* Creator Information */}
-            <div className="rounded-xl bg-[#226B52]/5 p-4">
-              <p className="text-xs font-medium text-gray-500">
+            <div className="rounded-xl bg-primary/5 p-4 dark:bg-primary/10">
+              <p className="text-xs font-medium text-muted-foreground">
                 Event Created By
               </p>
 
-              <p className="mt-1 break-all text-sm font-semibold text-[#153F35]">
+              <p className="mt-1 break-all text-sm font-semibold text-heading">
                 {session.user.email}
-                </p>
+              </p>
 
             </div>
 
@@ -413,7 +415,7 @@ export default function CreateEventPage() {
             {errorMessage && (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
               >
                 {errorMessage}
               </div>
@@ -423,7 +425,7 @@ export default function CreateEventPage() {
             {successMessage && (
               <div
                 role="status"
-                className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+                className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
               >
                 <p className="font-semibold">{successMessage}</p>
 
@@ -440,7 +442,7 @@ export default function CreateEventPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Send className="h-4 w-4" />
               {isSubmitting ? "Creating Event..." : "Create Event"}

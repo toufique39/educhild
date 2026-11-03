@@ -33,19 +33,19 @@ const galleryImages = [
 
 export default function CommunityGallerySection() {
   return (
-    <section className="bg-[#F8FAF7] px-4 py-20 sm:px-6 lg:px-8">
+    <section className="bg-background px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Section Heading */}
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <span className="mb-3 inline-block rounded-full bg-[#226B52]/10 px-4 py-2 text-sm font-semibold text-[#226B52]">
+          <span className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-brand-text">
             Our Community
           </span>
 
-          <h2 className="text-3xl font-bold tracking-tight text-[#153F35] sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-heading sm:text-4xl">
             Moments That Make a Difference
           </h2>
 
-          <p className="mt-4 text-base leading-7 text-[#1E2E27]/70">
+          <p className="mt-4 text-base leading-7 text-muted-foreground">
             Every helping hand creates a story. Explore the moments,
             connections, and positive changes happening through our
             community activities.

@@ -2,7 +2,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --radius: 0.875rem;
@@ -40,44 +40,55 @@
   --chart-3: #659b7a;
   --chart-4: #8ab5a0;
   --chart-5: #d69b43;
+
+  /* EduChild semantic aliases (shared by page components) */
+  --heading: #153f35;            /* deep-green headings */
+  --brand-text: #226b52;         /* green text, links, icons */
+  --brand-text-hover: #153f35;   /* hover color for green text */
+  --primary-hover: #153f35;      /* primary button hover */
+  --amber-gold: #a46b13;         /* amber icon/text on tint */
+  --tint-green: #eaf2ec;         /* soft green icon tile */
+  --tint-amber: #fff2d9;         /* soft amber icon tile */
+  --field: #ffffff;              /* form field background */
 }
 
 .dark {
-  --background: #101b17;
-  --foreground: #ecf3ed;
+  --background: #0b1713;
+  --foreground: #e5f2ea;
 
-  --card: #172720;
-  --card-foreground: #ecf3ed;
+  --card: #142820;
+  --card-foreground: #e5f2ea;
 
-  --popover: #172720;
-  --popover-foreground: #ecf3ed;
+  --popover: #142820;
+  --popover-foreground: #e5f2ea;
 
-  --primary: #50a982;
-  --primary-foreground: #09251a;
+  --primary: #226b52;
+  --primary-foreground: #ffffff;
 
-  --secondary: #203b30;
-  --secondary-foreground: #dce9df;
+  --secondary: #1d3329;
+  --secondary-foreground: #e5f2ea;
 
-  --muted: #1a2c24;
-  --muted-foreground: #a0b1a6;
+  --muted: #16261f;
+  --muted-foreground: #a7b8ae;
 
-  --accent: #d69b43;
-  --accent-foreground: #1d251d;
+  --accent: #f3b85d;
+  --accent-foreground: #1e2e27;
 
   --destructive: #ef6464;
 
-  --border: #294136;
-  --input: #294136;
+  --border: #294739;
+  --input: #294739;
   --ring: #58a982;
 
-  --chart-1: #50a982;
-  --chart-2: #d69b43;
-  --chart-3: #8ab5a0;
-  --chart-4: #659b7a;
-  --chart-5: #f3b85d;
+  --chart-1: #226b52;
+  --chart-2: #f3b85d;
+  --chart-3: #659b7a;
+  --chart-4: #8ab5a0;
+  --chart-5: #d69b43;
 }
 
 @theme inline {
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -105,7 +116,15 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  
+  --color-heading: var(--heading);
+  --color-brand-text: var(--brand-text);
+  --color-brand-text-hover: var(--brand-text-hover);
+  --color-primary-hover: var(--primary-hover);
+  --color-amber-gold: var(--amber-gold);
+  --color-tint-green: var(--tint-green);
+  --color-tint-amber: var(--tint-amber);
+  --color-field: var(--field);
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -115,6 +134,15 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  /* Native date/time pickers, select dropdowns and scrollbars use dark base. */
+  color-scheme: dark;
 }
 
 body {
