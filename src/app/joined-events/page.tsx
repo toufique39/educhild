@@ -122,7 +122,8 @@ setEvents(result.data ?? []);
       return;
     }
 
-    loadJoinedEvents();
+    // Defer loading so no setState runs synchronously inside the effect
+    void Promise.resolve().then(loadJoinedEvents);
   }, [isPending, session, router, loadJoinedEvents]);
 
   // Guest user redirecting (checked before the loading state so guests

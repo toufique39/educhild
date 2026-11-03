@@ -136,7 +136,6 @@ export default function EventExplorer({
           ))}
         </div>
       ) : (
-        {/* No Results */}
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
           <CalendarX className="mx-auto mb-4 h-12 w-12 text-brand-text" />
 

@@ -188,7 +188,8 @@ export default function ManageEventsPage() {
       return;
     }
 
-    loadMyEvents();
+    // Defer loading so no setState runs synchronously inside the effect
+    void Promise.resolve().then(loadMyEvents);
   }, [isPending, session, router, loadMyEvents]);
 
   // Open edit form

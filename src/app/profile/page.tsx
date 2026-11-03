@@ -179,6 +179,7 @@ export default function ProfilePage() {
                 className="h-28 w-28 rounded-full border-4 border-primary/10 object-cover"
                 width={112}
                 height={112}
+                unoptimized
               />
             ) : (
               <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-brand-text">

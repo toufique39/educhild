@@ -158,6 +158,7 @@ export default function Navbar() {
                     className="h-9 w-9 rounded-full object-cover"
                     height={30}
                     width={30}
+                    unoptimized
                   />
                 ) : (
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
@@ -318,6 +319,7 @@ export default function Navbar() {
                       className="h-11 w-11 rounded-full object-cover"
                       width={44}
                       height={44}
+                      unoptimized
                     />
                   ) : (
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
