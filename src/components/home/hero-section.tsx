@@ -4,11 +4,12 @@ import Link from "next/link";
 
 import {
   ArrowRight,
-  ArrowUpRight,
   BookOpenCheck,
   Heart,
   Sparkles,
 } from "lucide-react";
+
+import VolunteerCta from "@/components/home/volunteer-cta";
 
 export default function HeroSection() {
   return (
@@ -59,14 +60,7 @@ export default function HeroSection() {
               <ArrowRight size={18} />
             </Link>
 
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-7 py-4 text-sm font-semibold text-foreground transition hover:border-primary hover:bg-secondary hover:text-brand-text"
-            >
-              Become a Volunteer
-
-              <ArrowUpRight size={17} />
-            </Link>
+            <VolunteerCta />
 
           </div>
 
