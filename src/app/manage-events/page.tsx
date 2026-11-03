@@ -182,8 +182,9 @@ export default function ManageEventsPage() {
     if (isPending) return;
 
     if (!session) {
+      // Login redirect renders before any loading screen (see render order below),
+      // so no setState is needed here.
       router.replace("/login?callbackUrl=%2Fmanage-events");
-      setIsLoading(false);
       return;
     }
 
@@ -359,6 +360,18 @@ export default function ManageEventsPage() {
     }
   };
 
+  // Redirecting guest users (checked before the loading state so guests
+  // always see the redirect, even while isLoading is still true)
+  if (!isPending && !session) {
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
+          Redirecting to login...
+        </p>
+      </main>
+    );
+  }
+
   // Loading state
   if (isPending || isLoading) {
     return (
@@ -369,17 +382,6 @@ export default function ManageEventsPage() {
             Loading your events...
           </p>
         </div>
-      </main>
-    );
-  }
-
-  // Redirecting guest users
-  if (!session) {
-    return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-background">
-        <p className="text-sm text-muted-foreground">
-          Redirecting to login...
-        </p>
       </main>
     );
   }

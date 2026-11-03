@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -42,7 +43,7 @@ export default function JoinEventButton({
     if (isPending) return;
 
     if (!session) {
-      // Avoid synchronous setState in effect body
+      // Avoid synchronous setState in effect 
       Promise.resolve().then(() => {
         setIsJoined(false);
         setIsChecking(false);
@@ -96,6 +97,8 @@ export default function JoinEventButton({
         if (isActive) {
           setMessage("Unable to verify your participation status.");
           setIsError(true);
+
+          toast.error("Unable to verify your participation status.");
         }
       } finally {
         if (isActive) {
@@ -109,7 +112,7 @@ export default function JoinEventButton({
     return () => {
       isActive = false;
     };
-  }, [session?.user.id, isPending, eventId]);
+  }, [session, isPending, eventId]);
 
   // Handle Join Event
   const handleJoinEvent = async () => {
@@ -156,6 +159,8 @@ export default function JoinEventButton({
       if (response.status === 409) {
         setIsJoined(true);
         setMessage("You have already joined this event.");
+
+        toast.info("You have already joined this event.");
         return;
       }
 
@@ -167,16 +172,20 @@ export default function JoinEventButton({
 
       setIsJoined(true);
       setMessage("You have successfully joined this event!");
+
+      toast.success("You have successfully joined this event!");
     } catch (error) {
       console.error("Join event error:", error);
 
-      setIsError(true);
-
-      setMessage(
+      const message =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again."
-      );
+          : "Something went wrong. Please try again.";
+
+      setIsError(true);
+      setMessage(message);
+
+      toast.error(message);
     } finally {
       setIsJoining(false);
     }
@@ -193,7 +202,7 @@ export default function JoinEventButton({
           isJoining ||
           isJoined
         }
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#226B52] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#153F35] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending || isChecking || isJoining ? (
           <>
@@ -218,8 +227,8 @@ export default function JoinEventButton({
           role={isError ? "alert" : "status"}
           className={`mt-4 rounded-lg border px-3 py-3 text-center text-sm ${
             isError
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-green-200 bg-green-50 text-green-700"
+              ? "border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
+              : "border-green-200 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300"
           }`}
         >
           {message}

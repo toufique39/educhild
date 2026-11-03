@@ -5,7 +5,6 @@ import {
   Search,
   HandHeart,
   Sprout,
-  ArrowRight,
   ArrowUpRight,
 } from "lucide-react";
 

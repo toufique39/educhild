@@ -116,13 +116,26 @@ setEvents(result.data ?? []);
     if (isPending) return;
 
     if (!session) {
+      // Login redirect renders before any loading screen (see render order below),
+      // so no setState is needed here.
       router.replace("/login?callbackUrl=%2Fjoined-events");
-      setIsLoading(false);
       return;
     }
 
     loadJoinedEvents();
   }, [isPending, session, router, loadJoinedEvents]);
+
+  // Guest user redirecting (checked before the loading state so guests
+  // always see the redirect, even while isLoading is still true)
+  if (!isPending && !session) {
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">
+          Redirecting to login...
+        </p>
+      </main>
+    );
+  }
 
   // Loading state
   if (isPending || isLoading) {
@@ -139,17 +152,6 @@ setEvents(result.data ?? []);
 
           <EventGridSkeleton count={6} />
         </div>
-      </main>
-    );
-  }
-
-  // Guest user redirecting
-  if (!session) {
-    return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-background">
-        <p className="text-sm text-muted-foreground">
-          Redirecting to login...
-        </p>
       </main>
     );
   }
