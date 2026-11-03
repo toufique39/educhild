@@ -3,30 +3,35 @@ const galleryImages = [
     src: "https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=900&q=85",
     alt: "Volunteers working together for a community project",
     title: "Together We Make a Difference",
+    tag: "Community Cleanup",
     className: "col-span-2 row-span-2",
   },
   {
     src: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=700&q=85",
     alt: "People participating in a community volunteering activity",
     title: "Community Support",
+    tag: "Donation Drive",
     className: "",
   },
   {
     src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=700&q=85",
     alt: "Volunteers helping people in need",
     title: "Helping Hands",
+    tag: "Healthcare Camp",
     className: "",
   },
   {
     src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=700&q=85",
     alt: "Community members working together",
     title: "Stronger Together",
+    tag: "Education Support",
     className: "",
   },
   {
     src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=700&q=85",
     alt: "Children participating in a learning activity",
     title: "Every Child Matters",
+    tag: "Tree Plantation",
     className: "",
   },
 ];
@@ -70,6 +75,11 @@ export default function CommunityGallerySection() {
 
               {/* Image Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+
+              {/* Event Type Badge */}
+              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-[#153F35] backdrop-blur-sm">
+                {image.tag}
+              </span>
 
               {/* Image Caption */}
               <figcaption className="absolute bottom-0 left-0 p-4 sm:p-5">
