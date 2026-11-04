@@ -10,6 +10,7 @@ import {
   Loader2,
   PlusCircle,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -42,6 +43,13 @@ export default function JoinedEventsPage() {
   const [events, setEvents] = useState<JoinedEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Leave event states
+  const [leaveConfirmId, setLeaveConfirmId] = useState<string | null>(
+    null
+  );
+
+  const [isLeavingId, setIsLeavingId] = useState<string | null>(null);
 
   // Get JWT token
   const getAccessToken = useCallback(async () => {
@@ -110,6 +118,57 @@ setEvents(result.data ?? []);
       setIsLoading(false);
     }
   }, [getAccessToken]);
+
+  // Leave (delete) a joined event
+  const handleLeaveEvent = async (eventId: string) => {
+    setErrorMessage("");
+
+    try {
+      setIsLeavingId(eventId);
+
+      const token = await getAccessToken();
+
+      // Inverse of the join request: DELETE /events/:id/join
+      const response = await fetch(
+        `${EVENTS_API_URL}/${encodeURIComponent(eventId)}/join`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        throw new Error(
+          result?.message || "Failed to leave this event."
+        );
+      }
+
+      // Remove the event from local state
+      setEvents((prev) =>
+        prev.filter((event) => event._id !== eventId)
+      );
+
+      setLeaveConfirmId(null);
+
+      toast.success("You have left this event.");
+    } catch (error) {
+      console.error("Leave event error:", error);
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to leave this event.";
+
+      setErrorMessage(message);
+      toast.error(message);
+    } finally {
+      setIsLeavingId(null);
+    }
+  };
 
   // Authentication check and data loading
   useEffect(() => {
@@ -278,6 +337,56 @@ setEvents(result.data ?? []);
                   </div>
 
                   <EventCard event={event} />
+
+                  {/* Leave Event (delete from joined list) */}
+                  {leaveConfirmId === event._id ? (
+                    <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
+                      <p className="text-sm font-semibold text-red-800 dark:text-red-300">
+                        Leave this event?
+                      </p>
+
+                      <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                        It will be removed from your joined events.
+                      </p>
+
+                      <div className="mt-3 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleLeaveEvent(event._id)}
+                          disabled={isLeavingId !== null}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
+                        >
+                          {isLeavingId === event._id ? (
+                            <>
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              Leaving...
+                            </>
+                          ) : (
+                            "Yes, Leave Event"
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setLeaveConfirmId(null)}
+                          disabled={isLeavingId !== null}
+                          className="flex-1 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted disabled:opacity-60"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setLeaveConfirmId(event._id)}
+                      disabled={isLeavingId !== null}
+                      className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Leave Event
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
