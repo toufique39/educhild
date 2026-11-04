@@ -1,9 +1,12 @@
-EduChild — Frontend
+# EduChild
+
 A community-driven social development event platform where people can discover local initiatives, volunteer for events, and manage the events they organize.
-Live Application
+
+# Live Application
 - Live Website: https://fancy-bienenstitch-f8f9d5.netlify.app
 - Backend API: https://educhild-api.netlify.app
-Features
+  
+# Features
 - Responsive landing page with an introduction, platform features, upcoming events, community gallery, and newsletter section.
 - Browse upcoming community events and explore event details.
 - Search and filter events by category.
@@ -15,7 +18,9 @@ Features
 - View and update profile information.
 - Light and dark theme support.
 - Protected user experiences backed by Better Auth sessions and JWT-based API authorization.
-Tech Stack
+
+  
+# Tech Stack
 - Framework: Next.js (App Router)
 - Language: TypeScript
 - Styling: Tailwind CSS
@@ -25,7 +30,9 @@ Tech Stack
 - Authorization: Better Auth JWT plugin
 - Theme: next-themes
 - Deployment: Netlify
-Backend Integration
+
+  
+# Backend Integration
 The frontend communicates with the Express API deployed at:
 https://educhild-api.netlify.app
 The upcoming-events endpoint is configured through NEXT_PUBLIC_EVENTS_API_URL.
@@ -37,6 +44,7 @@ cd dir
 npm install
 3. Configure environment variables
 Create a .env.local file in the project root:
+
 # MongoDB connection used by Better Auth
 MONGODB_URI=your_mongodb_connection_string
 MONGODB_DB=edu_child
@@ -64,7 +72,7 @@ npm start
 Google OAuth Configuration
 For local development, configure the Google OAuth client with the local application origin and the Better Auth callback URL.
 
-For the deployed application, use:
+# For the deployed application, use:
 
 Authorized JavaScript origin
 https://fancy-bienenstitch-f8f9d5.netlify.app
